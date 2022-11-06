@@ -26,7 +26,10 @@ export default [
       commonjs(),
       typescript({ tsconfig: './tsconfig.json' }),
       terser,
-      postcss(),
+      postcss({
+        extract: 'style.css',
+        minimize: true,
+      }),
     ],
   },
   {

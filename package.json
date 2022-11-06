@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -69,7 +69,7 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "main": "dist/cjs/main.js",
-  "module": "dist/esm/main.js",
+  "module": "dist/main.js",
   "types": "dist/tree-of-nodes.d.ts",
   "files": [
     "dist"
@@ -93,8 +93,8 @@
     ]
   },
   "scripts": {
-    "build": "rollup -c --configPlugin typescript && parcel build demo/index.html -d demo/public --public-url ./",
-    "start": "parcel demo/index.html",
+    "build": "rollup -c --configPlugin typescript",
+    "start": "parcel demo/index.html --dist-dir demo/dist",
     "test": "jest"
   }
 }
