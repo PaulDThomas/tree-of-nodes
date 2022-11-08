@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 
 interface WordEntryProps {
@@ -13,10 +13,18 @@ interface WordEntryProps {
 
 export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
   ({ id, value, editing, saving, setValue, sendEscape, style }, ref): JSX.Element => {
-    const [currentStyle, setCurrentStyle] = useState<React.CSSProperties>({
-      display: 'inline-block',
-    });
     WordEntry.displayName = 'WordEntry';
+    const currentStyle = useMemo<React.CSSProperties>(() => {
+      return {
+        display: 'inline-block',
+        padding: '1px',
+        paddingLeft: '3px',
+        paddingRight: '3px',
+        border: '1px',
+        borderRadius: '3px',
+        ...style,
+      };
+    }, [style]);
 
     const [currentValue, setCurrentValue] = useState<string>(value ?? '');
     useEffect(() => {
@@ -24,15 +32,14 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     }, [value]);
 
     const returnData = useCallback(() => {
-      if (typeof setValue !== 'function') return;
-      setValue(currentValue);
+      setValue && setValue(currentValue);
     }, [currentValue, setValue]);
 
     const keyPress = useCallback(
       (e: React.KeyboardEvent) => {
         if (e.code === 'Escape') {
           setCurrentValue(value ?? '');
-          if (typeof sendEscape === 'function') sendEscape();
+          sendEscape && sendEscape();
         } else if (e.code === 'Enter') {
           returnData();
         }
@@ -40,27 +47,22 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       [returnData, sendEscape, value],
     );
 
-    useEffect(() => {
-      setCurrentStyle({
-        padding: '1px',
-        paddingLeft: '3px',
-        paddingRight: '3px',
-        border: '1px',
-        borderRadius: '3px',
-        display: 'inline-block',
-        ...style,
-      });
-    }, [style]);
-
     // Simple if not editing
     if (!editing) {
-      return <span style={currentStyle}>{value}</span>;
+      return (
+        <span
+          style={currentStyle}
+          id={id}
+        >
+          {value}
+        </span>
+      );
     }
 
     return (
       <div
         style={currentStyle}
-        id={id}
+        id={id ? `${id}-holder` : undefined}
       >
         {saving && (
           <Spinner
@@ -70,13 +72,12 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           />
         )}
         <input
-          id={id ? `${id}-input` : undefined}
+          id={id}
           ref={ref}
           type='text'
           style={{
             lineHeight: '0.75rem',
-            border: editing ? '1px dotted black' : saving ? '' : '1px dotted grey',
-            margin: !saving && !editing ? '1px' : '',
+            border: '1px dotted black',
             width: 'auto',
             minWidth: '0',
           }}

@@ -19,7 +19,8 @@
     "declaration": true,
     "declarationDir": "types",
     "jsx": "react-jsx",
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "sourceMap": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

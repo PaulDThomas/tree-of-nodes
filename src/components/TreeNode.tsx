@@ -217,6 +217,7 @@ export const TreeNode = ({
               editing={renaming}
               saving={updatingNode}
               setValue={(ret) => renameNode(ret)}
+              sendEscape={() => setRenaming(false)}
               style={{
                 border: currentBorder,
                 margin: currentBorder === '' ? '1px' : '',
