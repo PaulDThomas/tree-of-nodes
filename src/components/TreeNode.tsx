@@ -240,34 +240,32 @@ export const TreeNode = ({
           )}
         </span>
       )}
-      {childNodes !== undefined && (
-        <>
-          {childNodes.map((h) => (
-            <span
-              key={h.id}
-              style={{
-                marginLeft: '16px',
-                display: 'block',
-                maxHeight: expanded ? '99999px' : '0px',
-                height: expanded ? 'auto' : '0px',
-                overflowY: 'hidden',
-                visibility: expanded ? 'inherit' : 'hidden',
-                opacity: expanded ? 1 : 0,
-                transition: 'visibility .3s, opacity .3s ease-in-out, max-height 0.3s ease-in-out',
-              }}
-            >
-              <TreeNode
-                id={h.id}
-                canRemove={canRemoveChildren}
-                canRename={canRenameChildren}
-                canAddChildren={canAddChildren}
-                canRemoveChildren={canRemoveChildren}
-                canRenameChildren={canRenameChildren}
-              />
-            </span>
-          ))}
-        </>
-      )}
+      {childNodes !== undefined &&
+        childNodes.map((h, i) => (
+          <span
+            key={h.id}
+            id={`${treeContext.id}-treenode-child-${h.id}`}
+            style={{
+              marginLeft: '16px',
+              display: 'block',
+              maxHeight: expanded ? '99999px' : '0px',
+              height: expanded ? 'auto' : '0px',
+              overflowY: 'hidden',
+              visibility: expanded ? 'inherit' : 'hidden',
+              opacity: expanded ? 1 : 0,
+              transition: 'visibility .3s, opacity .3s ease-in-out, max-height 0.3s ease-in-out',
+            }}
+          >
+            <TreeNode
+              id={h.id}
+              canRemove={canRemoveChildren}
+              canRename={canRenameChildren}
+              canAddChildren={canAddChildren}
+              canRemoveChildren={canRemoveChildren}
+              canRenameChildren={canRenameChildren}
+            />
+          </span>
+        ))}
       {showNewNode && (
         <div>
           <WordEntry

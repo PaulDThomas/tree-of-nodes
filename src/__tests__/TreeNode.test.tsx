@@ -5,19 +5,7 @@ import { iNodeUpdate, TreeNodeData, TreeOfNodesContext } from '../components/Tre
 import { TreeNode } from '../components/TreeNode';
 import { Key } from 'react';
 import { getById } from '../../setupTests';
-
-const mockNodes: TreeNodeData<{ value: number } | number | undefined>[] = [
-  { id: 0, label: 'Root', data: { value: 0 } },
-  { id: 'A', parentId: 0, label: 'A', data: { value: 3 } },
-  { id: 'B', parentId: 'A', label: 'Be', data: { value: 9 } },
-  { id: 'X', label: 'Ex', data: 16 },
-  { id: 'Y', parentId: 'X', label: 'Why?', data: { value: 18 } },
-  { id: 'Z', parentId: 'X', label: 'Zed', data: -23 },
-  { id: 1, parentId: 0, label: 'One', data: undefined },
-  { id: 2, parentId: 1, label: 'One.Two', data: { value: 32 } },
-  { id: 3, parentId: 1, label: 'One.Three', data: { value: 12 } },
-  { id: 4, parentId: 1, label: 'One.Four', data: -1 },
-];
+import { mockNodes } from '../__mocks__/mockNodes';
 
 describe('Tree node', () => {
   test('Empty render', async () => {
@@ -41,6 +29,44 @@ describe('Tree node', () => {
     });
     const tn = container.querySelector('#test-tree-treenode-0') as HTMLElement;
     expect(tn).toBeInTheDocument();
+  });
+
+  test('Context menu actions, nowt', async () => {
+    const user = userEvent.setup();
+    const mockRename = jest.fn(async () => {
+      return { success: true };
+    });
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    await act(async () => {
+      render(
+        <ContextMenuProvider>
+          <TreeOfNodesContext.Provider
+            value={{
+              id: 'test-tree',
+              nodeList: mockNodes,
+              expandedNodes: mockNodes.map((n) => n.id),
+              onRename: mockRename,
+            }}
+          >
+            <TreeNode
+              id={0}
+              canRename={true}
+            />
+          </TreeOfNodesContext.Provider>
+        </ContextMenuProvider>,
+        { container },
+      );
+    });
+    const we = screen.getByText('Root');
+    expect(we).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.contextMenu(we);
+    });
+    const ren = screen.getByText('Rename');
+    const child = screen.getByText('One.Four');
+    expect(child).toBeInTheDocument();
+    await user.click(child);
   });
 
   test('Context menu actions, rename', async () => {
