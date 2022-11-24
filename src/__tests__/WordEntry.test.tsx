@@ -3,16 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { WordEntry } from '../components/WordEntry';
 
 describe('Word entry', () => {
-  test('Empty render', async () => {
-    const { container } = render(<WordEntry id='testControl' />);
-    const we = container.querySelector('#testControl') as HTMLElement;
-    expect(we).toBeInTheDocument();
-    expect(we.nodeName).toEqual('SPAN');
-    expect(we.textContent).toEqual('');
-  });
-
   test('Read only render', async () => {
-    render(<WordEntry value='Check' />);
+    render(
+      <WordEntry
+        id='test-control'
+        value='Check'
+      />,
+    );
     const we = screen.queryByText('Check') as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual('SPAN');
@@ -23,7 +20,7 @@ describe('Word entry', () => {
     const user = userEvent.setup();
     render(
       <WordEntry
-        id='testControl'
+        id='test-control'
         value='Check'
         editing={true}
         setValue={mockSet}
@@ -46,7 +43,7 @@ describe('Word entry', () => {
     const user = userEvent.setup();
     render(
       <WordEntry
-        id='testControl'
+        id='test-control'
         value='Check'
         editing={true}
         setValue={mockSet}
@@ -67,13 +64,13 @@ describe('Word entry', () => {
     const user = userEvent.setup();
     const { container } = render(
       <WordEntry
-        id='testControl'
+        id='test-control'
         editing={true}
         setValue={mockSet}
         sendEscape={mockEscape}
       />,
     );
-    const we = container.querySelector('#testControl') as HTMLElement;
+    const we = container.querySelector('#test-control') as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual('INPUT');
     fireEvent.focus(we);
@@ -85,35 +82,12 @@ describe('Word entry', () => {
     expect(mockEscape).toHaveBeenCalledTimes(1);
   });
 
-  test('Editable render and escape 2', async () => {
-    const mockEscape = jest.fn();
-    const mockSet = jest.fn();
-    const user = userEvent.setup();
-    render(
-      <WordEntry
-        value='Check'
-        editing={true}
-        setValue={mockSet}
-        sendEscape={mockEscape}
-      />,
-    );
-    const we = screen.getByDisplayValue('Check') as HTMLElement;
-    expect(we).toBeInTheDocument();
-    expect(we.nodeName).toEqual('INPUT');
-    fireEvent.focus(we);
-    await user.clear(we);
-    await user.type(we, 'One-Two');
-    await user.keyboard('{Escape}');
-    expect(we).toHaveValue('Check');
-    expect(mockEscape).toHaveBeenCalledTimes(1);
-  });
-
   test('Saving render', async () => {
     const mockEscape = jest.fn();
     const mockSet = jest.fn();
     const { container } = render(
       <WordEntry
-        id='testControl'
+        id='test-control'
         value='Check'
         editing={true}
         setValue={mockSet}
@@ -122,26 +96,11 @@ describe('Word entry', () => {
       />,
     );
     const we = screen.getByDisplayValue('Check') as HTMLInputElement;
-    const spinner = container.querySelector('#testControl-spinner');
+    const spinner = container.querySelector('#test-control-spinner');
     expect(we).toBeInTheDocument();
     expect(spinner).toBeInTheDocument();
     expect(we.nodeName).toEqual('INPUT');
     expect(we).toHaveValue('Check');
     expect(we.disabled).toEqual(true);
-  });
-
-  test('Saving render, no id', async () => {
-    const { container } = render(
-      <WordEntry
-        value='Check'
-        saving
-        editing
-      />,
-    );
-    screen.debug();
-    const we = screen.getByDisplayValue('Check') as HTMLInputElement;
-    const spinner = container.querySelector('.spinner-border');
-    expect(we).toBeInTheDocument();
-    expect(spinner).toBeInTheDocument();
   });
 });

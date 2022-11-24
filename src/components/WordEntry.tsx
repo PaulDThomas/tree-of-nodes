@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 
 interface WordEntryProps {
-  id?: string;
+  id: Key;
   value?: string;
   editing?: boolean;
   saving?: boolean;
@@ -52,7 +52,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       return (
         <span
           style={currentStyle}
-          id={id}
+          id={String(id)}
         >
           {value}
         </span>
@@ -62,17 +62,17 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     return (
       <div
         style={currentStyle}
-        id={id ? `${id}-holder` : undefined}
+        id={`${id}-holder`}
       >
         {saving && (
           <Spinner
-            id={id ? `${id}-spinner` : undefined}
+            id={`${id}-spinner`}
             size='sm'
             animation='border'
           />
         )}
         <input
-          id={id}
+          id={String(id)}
           ref={ref}
           type='text'
           style={{

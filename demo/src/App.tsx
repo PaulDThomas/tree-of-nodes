@@ -33,6 +33,7 @@ export default () => {
         >
           <h4>Tree of nodes</h4>
           <TreeOfNodes<{ value: number } | number | undefined>
+            id={'nodetree'}
             nodeList={nodeList}
             roots={[0, 'X']}
             canAddChildren

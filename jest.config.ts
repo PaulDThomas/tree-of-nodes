@@ -28,6 +28,9 @@ const config: Config = {
   coverageProvider: 'v8',
   collectCoverageFrom: ['**/*.{js,jsx}', '**/*.{ts,tsx}'],
   testEnvironment: 'jsdom',
+  moduleNameMapper: {
+    '\\.(css|less)$': '<rootDir>/src/__mocks__/styleMock.ts',
+  },
 };
 
 export default config;

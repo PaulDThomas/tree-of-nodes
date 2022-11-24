@@ -43,7 +43,7 @@ export const TreeNode = ({
     [id, treeContext.nodeList],
   );
 
-  // Axios state
+  // State
   const loading = useMemo<boolean>(
     () => treeContext.nodeList.findIndex((n) => n.id === id) === -1,
     [id, treeContext.nodeList],
@@ -106,14 +106,13 @@ export const TreeNode = ({
 
   const deleteThis = useCallback(async () => {
     setUpdatingNode(true);
-    if (thisNode === undefined) return;
     if (treeContext.onRemove) {
       handleReturn(await treeContext.onRemove(id));
     }
     setUpdatingNode(false);
-  }, [handleReturn, id, thisNode, treeContext]);
+  }, [handleReturn, id, treeContext]);
 
-  // // Context actions
+  // Context actions
   const addChild = useCallback(() => {
     if (menuContext.set) {
       menuContext.set({ visible: false });
@@ -146,10 +145,15 @@ export const TreeNode = ({
       e.preventDefault();
       e.stopPropagation();
       const menuItems: iMenuItem[] = [];
-      if (canAddChildren) menuItems.push({ label: 'Add', action: addChild });
-      if (canRename) menuItems.push({ label: 'Rename', action: renameThis });
-      if (canRemove && (childNodes === undefined || childNodes.length === 0))
+      if (canAddChildren) {
+        menuItems.push({ label: 'Add', action: addChild });
+      }
+      if (canRename) {
+        menuItems.push({ label: 'Rename', action: renameThis });
+      }
+      if (canRemove && (childNodes === undefined || childNodes.length === 0)) {
         menuItems.push({ label: 'Delete', action: removeThis });
+      }
       if (typeof menuContext.set === 'function') {
         menuContext.set({
           visible: true,
@@ -174,7 +178,8 @@ export const TreeNode = ({
   // Return node
   return (
     <div
-      className='hierarchy-node'
+      id={`${treeContext.id}-treenode-${id}`}
+      className='treenode'
       onClickCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
       onContextMenuCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
       onFocusCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
@@ -197,21 +202,29 @@ export const TreeNode = ({
           {childNodes !== undefined && childNodes.length > 0 ? (
             !expanded ? (
               <CaretRightFill
-                id={`hierarchynode-caret-${id}`}
+                role='button'
+                aria-expanded={false}
+                id={`${treeContext.id}-treenode-caret-${id}`}
                 onClick={() => treeContext.handleExpandClick && treeContext.handleExpandClick(id)}
               />
             ) : (
               <CaretDownFill
-                id={`hierarchynode-caret-${id}`}
+                role='button'
+                aria-expanded={true}
+                id={`${treeContext.id}-treenode-caret-${id}`}
                 onClick={() => treeContext.handleExpandClick && treeContext.handleExpandClick(id)}
               />
             )
           ) : (
-            <CaretRight />
+            <CaretRight
+              role='button'
+              aria-expanded={false}
+              aria-disabled={true}
+            />
           )}
-          {thisNode !== undefined ? (
+          {thisNode && (
             <WordEntry
-              id={id ? `treenode-word-${id}` : undefined}
+              id={`${treeContext.id}-treenode-entry-${id}`}
               ref={currentNameRef}
               value={thisNode.label}
               editing={renaming}
@@ -224,8 +237,6 @@ export const TreeNode = ({
                 backgroundColor: currentBorder === '' ? '' : 'lightgrey',
               }}
             />
-          ) : (
-            <i>No name</i>
           )}
         </span>
       )}
@@ -261,7 +272,7 @@ export const TreeNode = ({
         <div>
           <WordEntry
             style={{ marginLeft: '14px' }}
-            id={id ? `hierarchynode-new-${id}` : undefined}
+            id={`treenode-new-${id}`}
             ref={newNameRef}
             editing={true}
             setValue={(ret) => {

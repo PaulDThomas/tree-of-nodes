@@ -21,6 +21,7 @@ export interface iNodeUpdate {
 }
 
 interface iTreeOfNodes<T> {
+  id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
   selectedId?: Key;
@@ -37,6 +38,7 @@ interface iTreeOfNodes<T> {
 }
 
 type TreeOfNodesContextData<T> = {
+  id: string;
   nodeList: TreeNodeData<T>[];
   selectedId?: Key;
   handleSelect?: (ret: Key) => void;
@@ -48,10 +50,12 @@ type TreeOfNodesContextData<T> = {
 };
 
 export const TreeOfNodesContext = createContext<TreeOfNodesContextData<unknown>>({
+  id: 'tree-of-nodes',
   nodeList: [],
 });
 
 export const TreeOfNodes = <T extends unknown>({
+  id,
   nodeList,
   roots,
   // canAddRoot = false,
@@ -86,6 +90,7 @@ export const TreeOfNodes = <T extends unknown>({
     <ContextMenuProvider>
       <TreeOfNodesContext.Provider
         value={{
+          id: id,
           nodeList,
           selectedId,
           handleSelect,

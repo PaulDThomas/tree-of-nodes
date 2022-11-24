@@ -20,7 +20,7 @@ export const ContextMenu = React.forwardRef<HTMLDivElement, contextMenuProps>(
             key={i}
             className='context-menu-item'
             onClick={() => {
-              if (typeof e.action === 'function') e.action();
+              e.action && e.action();
             }}
           >
             {e.label ?? ''}
