@@ -5,20 +5,20 @@ export interface iNodeUpdate {
   ErrorText?: string;
 }
 
-export type TreeNodeBase = {
+export interface TreeNodeBase {
   id: Key;
   label: string;
   parentId?: Key;
-};
+}
 
-export type TreeNodeData<T> = {
+export interface TreeNodeData<T> {
   id: Key;
   label: string;
   parentId?: Key;
   data: T;
-};
+}
 
-export type TreeOfNodesContextData<T> = {
+export interface TreeOfNodesContextData<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   selectedId?: Key;
@@ -28,7 +28,7 @@ export type TreeOfNodesContextData<T> = {
   onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRename?: (id: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (id: Key) => Promise<iNodeUpdate>;
-};
+}
 
 export const TreeOfNodesContext = createContext<TreeOfNodesContextData<unknown>>({
   id: 'tree-of-nodes',

@@ -1,10 +1,11 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, queryByAttribute, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TreeOfNodesContext } from '../components/TreeOfNodesContext';
-import { getById } from '../../setupTests';
 import { ContextMenuProvider, MenuContext } from '../components/ContextMenuProvider';
 import { TreeNode } from '../components/TreeNode';
+import { TreeOfNodesContext } from '../components/TreeOfNodesContext';
 import { mockNodes } from '../__mocks__/mockNodes';
+
+const getById = queryByAttribute.bind(null, 'id');
 
 describe('Tree node', () => {
   test('Empty render', async () => {
@@ -212,7 +213,6 @@ describe('Tree node', () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    const mockEscape = jest.fn();
     const container = document.createElement('div');
     document.body.appendChild(container);
     await act(async () => {
@@ -256,6 +256,5 @@ describe('Tree node', () => {
     });
     expect(mockAdd).not.toHaveBeenCalledWith(4, 'new name');
     expect(newNode).not.toBeInTheDocument();
-    expect(mockExpand).toHaveBeenCalled();
   });
 });
