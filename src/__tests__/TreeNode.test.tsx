@@ -1,10 +1,9 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ContextMenuProvider, MenuContext } from '../components/ContextMenuProvider';
-import { iNodeUpdate, TreeNodeData, TreeOfNodesContext } from '../components/TreeOfNodes';
-import { TreeNode } from '../components/TreeNode';
-import { Key } from 'react';
+import { TreeOfNodesContext } from '../components/TreeOfNodesContext';
 import { getById } from '../../setupTests';
+import { ContextMenuProvider, MenuContext } from '../components/ContextMenuProvider';
+import { TreeNode } from '../components/TreeNode';
 import { mockNodes } from '../__mocks__/mockNodes';
 
 describe('Tree node', () => {

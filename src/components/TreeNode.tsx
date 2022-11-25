@@ -7,7 +7,7 @@ import {
   ExclamationCircleFill,
 } from 'react-bootstrap-icons';
 import { iMenuItem, MenuContext } from './ContextMenuProvider';
-import { iNodeUpdate, TreeOfNodesContext } from './TreeOfNodes';
+import { iNodeUpdate, TreeOfNodesContext } from './TreeOfNodesContext';
 import { WordEntry } from './WordEntry';
 
 interface TreeNodeProps {

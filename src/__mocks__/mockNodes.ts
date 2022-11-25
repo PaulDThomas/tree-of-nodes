@@ -1,4 +1,4 @@
-import { TreeNodeData } from 'components';
+import { TreeNodeData } from 'components/TreeOfNodesContext';
 
 export const mockNodes: TreeNodeData<{ value: number } | number | undefined>[] = [
   { id: 0, label: 'Root', data: { value: 0 } },
