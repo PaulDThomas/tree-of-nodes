@@ -5,7 +5,7 @@
 
 [![npm][npm]][npm-url]
 [![size][size]][size-url]
-![npm bundle size](https://img.shields.io/bundlephobia/min/@asup/simple-table)
+![npm bundle size](https://img.shields.io/bundlephobia/min/@asup/tree-of-nodes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/PaulDThomas/tree-of-nodes/master/LICENCE)
 
 # @asup/tree-of-notes
