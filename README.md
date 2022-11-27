@@ -98,7 +98,7 @@ export interface iNodeUpdate {
 Inbuilt context menu provider, takes a list of available actions and renders a context menu on appropriate click.
 
 ```
-import { ContextMenuProvider, iMenuItem } from '@asup/tree-of-nodes';
+import { ContextMenuProvider, iMenuItem, MenuContext } from '@asup/tree-of-nodes';
 import '@asup/tree-of-nodes/dist/style.css';
 
 ... inside REACT component
@@ -107,8 +107,7 @@ import '@asup/tree-of-nodes/dist/style.css';
 
   <SomeChild
 
-    const showMenu () = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    const showMenu = useCallback((e) => {
       e.preventDefault();
       e.stopPropagation();
       const menuItems: iMenuItem[] = [
