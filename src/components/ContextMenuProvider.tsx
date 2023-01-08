@@ -37,13 +37,12 @@ export const ContextMenuProvider = ({ children }: iContextMenuProvider): JSX.Ele
   // Update menu items
   const updateMenu = useCallback(
     (ret: { visible?: boolean; x?: number; y?: number; menuItems?: iMenuItem[] }) => {
-      if (!divRef.current) return;
-      if (ret.visible !== undefined) setMenuVisible(ret.visible);
-      if (ret.x !== undefined)
-        setMenuXPos(ret.x - window.scrollX - divRef.current.getBoundingClientRect().x);
-      if (ret.y !== undefined)
-        setMenuYPos(ret.y - window.scrollX - divRef.current.getBoundingClientRect().y);
-      if (ret.menuItems !== undefined) setMenuItems(ret.menuItems);
+      if (divRef.current) {
+        if (ret.visible !== undefined) setMenuVisible(ret.visible);
+        if (ret.x) setMenuXPos(ret.x - window.scrollX - divRef.current.getBoundingClientRect().x);
+        if (ret.y) setMenuYPos(ret.y - window.scrollX - divRef.current.getBoundingClientRect().y);
+        if (ret.menuItems !== undefined) setMenuItems(ret.menuItems);
+      }
     },
     [],
   );
