@@ -96,6 +96,7 @@
   "scripts": {
     "build": "rollup -c --configPlugin typescript",
     "start": "parcel demo/index.html --dist-dir demo/dist",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "test:coverage-report": "npm test -- --coverage --watchAll=false"
   }
 }

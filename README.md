@@ -107,6 +107,7 @@ import '@asup/tree-of-nodes/dist/style.css';
 
   <SomeChild
 
+    const menuContext = useContext(MenuContext);
     const showMenu = useCallback((e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -121,7 +122,6 @@ import '@asup/tree-of-nodes/dist/style.css';
           x: e.pageX,
           menuItems: menuItems,
         });
-      }
     },
     [...]);
 
