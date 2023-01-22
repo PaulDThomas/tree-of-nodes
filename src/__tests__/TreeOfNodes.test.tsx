@@ -11,6 +11,7 @@ describe('Tree of node', () => {
     const { container } = render(
       <TreeOfNodes
         id={'node-tree'}
+        selectedId={'Z'}
         nodeList={mockNodes}
         roots={[0]}
       />,
