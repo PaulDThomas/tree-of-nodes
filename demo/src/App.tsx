@@ -15,7 +15,7 @@ export default () => {
     { id: 3, parentId: 1, label: 'One.Three', data: { value: 12 } },
     { id: 4, parentId: 1, label: 'One.Four', data: -1 },
   ]);
-  const [selectedId, setSelectedId] = useState<Key>();
+  const [selectedId, setSelectedId] = useState<Key>(2);
 
   return (
     <Container>

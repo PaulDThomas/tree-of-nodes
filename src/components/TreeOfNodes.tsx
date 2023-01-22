@@ -1,9 +1,11 @@
-import { Key, useCallback, useState } from 'react';
+import { Key, useCallback, useEffect, useState } from 'react';
+import { checkExpandedNodes } from '../functions/checkExpandedNodes';
 import { ContextMenuProvider } from './ContextMenuProvider';
+import { iNodeUpdate, TreeNodeData } from './interface';
 import { TreeNode } from './TreeNode';
-import { iNodeUpdate, TreeNodeData, TreeOfNodesContext } from './TreeOfNodesContext';
+import { TreeOfNodesContext } from './TreeOfNodesContext';
 
-interface iTreeOfNodes<T> {
+interface TreeOfNodesProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
@@ -37,8 +39,12 @@ export const TreeOfNodes = <T extends unknown>({
   onAdd,
   onRename,
   onRemove,
-}: iTreeOfNodes<T>) => {
+}: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
+  useEffect(() => {
+    selectedId !== undefined &&
+      setExpandedNodes(checkExpandedNodes(nodeList, selectedId, expandedNodes));
+  }, []);
 
   // Change expansion and update context
   const changeExpand = useCallback(

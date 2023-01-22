@@ -1,24 +1,7 @@
 import { createContext, Key } from 'react';
+import { iNodeUpdate, TreeNodeData } from './interface';
 
-export interface iNodeUpdate {
-  success: boolean;
-  ErrorText?: string;
-}
-
-export interface TreeNodeBase {
-  id: Key;
-  label: string;
-  parentId?: Key;
-}
-
-export interface TreeNodeData<T> {
-  id: Key;
-  label: string;
-  parentId?: Key;
-  data: T;
-}
-
-export interface TreeOfNodesContextData<T> {
+export interface TreeOfNodesContextProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   selectedId?: Key;
@@ -30,7 +13,7 @@ export interface TreeOfNodesContextData<T> {
   onRemove?: (id: Key) => Promise<iNodeUpdate>;
 }
 
-export const TreeOfNodesContext = createContext<TreeOfNodesContextData<unknown>>({
+export const TreeOfNodesContext = createContext<TreeOfNodesContextProps<unknown>>({
   id: 'tree-of-nodes',
   nodeList: [],
 });
