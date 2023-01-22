@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/PaulDThomas/tree-of-nodes#readme",
   "dependencies": {
+    "@swc/helpers": "^0.4.14",
     "bootstrap": "^5.2.2",
     "react": "^18.0.0",
     "react-bootstrap": "^2.5.0",
@@ -32,11 +33,10 @@
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.7.0",
+    "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-sass": "^2.7.0",
+    "@parcel/transformer-typescript-types": "^2.8.0",
     "@parcel/transformer-webmanifest": "^2.7.0",
-    "@rollup/plugin-commonjs": "^23.0.2",
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-typescript": "^9.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -57,11 +57,6 @@
     "postcss": "^8.4.18",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
-    "rollup": "^3.2.5",
-    "rollup-plugin-dts": "^5.0.0",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3"
@@ -94,7 +89,7 @@
     ]
   },
   "scripts": {
-    "build": "rollup -c --configPlugin typescript",
+    "build": "parcel build src/main.ts",
     "start": "parcel demo/index.html --dist-dir demo/dist",
     "test": "jest --watch",
     "test:coverage-report": "npm test -- --coverage --watchAll=false"
