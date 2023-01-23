@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/PaulDThomas/tree-of-nodes#readme",
   "dependencies": {
+    "@asup/context-menu": "^1.0.0",
     "@swc/helpers": "^0.4.14",
     "bootstrap": "^5.2.2",
     "react": "^18.0.0",
@@ -45,6 +46,9 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/rollup-plugin-peer-deps-external": "^2.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.10",

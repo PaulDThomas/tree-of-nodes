@@ -5,15 +5,14 @@ export interface TreeOfNodesContextProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   selectedId?: Key;
-  handleSelect?: (ret: Key) => void;
-  expandedNodes?: Key[];
-  handleExpandClick?: (ret: Key, force?: boolean) => void;
+  handleSelect: (ret: Key) => void;
+  expandedNodes: Key[];
+  handleExpandClick: (ret: Key, force?: boolean) => void;
   onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRename?: (id: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (id: Key) => Promise<iNodeUpdate>;
 }
 
-export const TreeOfNodesContext = createContext<TreeOfNodesContextProps<unknown>>({
-  id: 'tree-of-nodes',
-  nodeList: [],
-});
+export const TreeOfNodesContext = createContext<TreeOfNodesContextProps<unknown> | undefined>(
+  undefined,
+);

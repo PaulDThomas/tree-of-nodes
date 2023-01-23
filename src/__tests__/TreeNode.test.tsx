@@ -1,6 +1,5 @@
 import { act, fireEvent, queryByAttribute, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ContextMenuProvider, MenuContext } from '../components/ContextMenuProvider';
 import { TreeNode } from '../components/TreeNode';
 import { TreeOfNodesContext } from '../components/TreeOfNodesContext';
 import { mockNodes } from '../__mocks__/mockNodes';
@@ -11,7 +10,7 @@ describe('Tree node', () => {
   test('Empty render', async () => {
     const { container } = render(<TreeNode id={'test'} />);
     const tn = container.querySelector('#tree-of-nodes-treenode-test') as HTMLElement;
-    expect(tn).toBeInTheDocument();
+    expect(tn).not.toBeInTheDocument();
   });
 
   test('Render with context', async () => {
@@ -19,11 +18,17 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <MenuContext.Provider value={{}}>
-          <TreeOfNodesContext.Provider value={{ id: 'test-tree', nodeList: mockNodes }}>
-            <TreeNode id={0} />
-          </TreeOfNodesContext.Provider>
-        </MenuContext.Provider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: [],
+            handleSelect: jest.fn(),
+            handleExpandClick: jest.fn(),
+          }}
+        >
+          <TreeNode id={0} />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
@@ -40,21 +45,21 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <ContextMenuProvider>
-          <TreeOfNodesContext.Provider
-            value={{
-              id: 'test-tree',
-              nodeList: mockNodes,
-              expandedNodes: mockNodes.map((n) => n.id),
-              onRename: mockRename,
-            }}
-          >
-            <TreeNode
-              id={0}
-              canRename={true}
-            />
-          </TreeOfNodesContext.Provider>
-        </ContextMenuProvider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: mockNodes.map((n) => n.id),
+            onRename: mockRename,
+            handleSelect: jest.fn(),
+            handleExpandClick: jest.fn(),
+          }}
+        >
+          <TreeNode
+            id={0}
+            canRename={true}
+          />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
@@ -64,6 +69,7 @@ describe('Tree node', () => {
       fireEvent.contextMenu(we);
     });
     const ren = screen.getByText('Rename');
+    expect(ren).toBeInTheDocument();
     const child = screen.getByText('One.Four');
     expect(child).toBeInTheDocument();
     await user.click(child);
@@ -78,21 +84,21 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <ContextMenuProvider>
-          <TreeOfNodesContext.Provider
-            value={{
-              id: 'test-tree',
-              nodeList: mockNodes,
-              expandedNodes: mockNodes.map((n) => n.id),
-              onRename: mockRename,
-            }}
-          >
-            <TreeNode
-              id={0}
-              canRename={true}
-            />
-          </TreeOfNodesContext.Provider>
-        </ContextMenuProvider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: mockNodes.map((n) => n.id),
+            onRename: mockRename,
+            handleSelect: jest.fn(),
+            handleExpandClick: jest.fn(),
+          }}
+        >
+          <TreeNode
+            id={0}
+            canRename={true}
+          />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
@@ -124,22 +130,22 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <ContextMenuProvider>
-          <TreeOfNodesContext.Provider
-            value={{
-              id: 'test-tree',
-              nodeList: mockNodes,
-              expandedNodes: mockNodes.map((n) => n.id),
-              onRemove: mockRemove,
-              selectedId: 4,
-            }}
-          >
-            <TreeNode
-              id={4}
-              canRemove={true}
-            />
-          </TreeOfNodesContext.Provider>
-        </ContextMenuProvider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: mockNodes.map((n) => n.id),
+            onRemove: mockRemove,
+            selectedId: 4,
+            handleSelect: jest.fn(),
+            handleExpandClick: jest.fn(),
+          }}
+        >
+          <TreeNode
+            id={4}
+            canRemove={true}
+          />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
@@ -165,24 +171,22 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <ContextMenuProvider>
-          <TreeOfNodesContext.Provider
-            value={{
-              id: 'test-tree',
-              nodeList: mockNodes,
-              expandedNodes: mockNodes.map((n) => n.id),
-              onAddChild: mockAdd,
-              handleSelect: mockSelect,
-              handleExpandClick: mockExpand,
-              selectedId: 4,
-            }}
-          >
-            <TreeNode
-              id={4}
-              canAddChildren={true}
-            />
-          </TreeOfNodesContext.Provider>
-        </ContextMenuProvider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: mockNodes.map((n) => n.id),
+            onAddChild: mockAdd,
+            handleSelect: mockSelect,
+            handleExpandClick: mockExpand,
+            selectedId: 4,
+          }}
+        >
+          <TreeNode
+            id={4}
+            canAddChildren={true}
+          />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
@@ -217,24 +221,22 @@ describe('Tree node', () => {
     document.body.appendChild(container);
     await act(async () => {
       render(
-        <ContextMenuProvider>
-          <TreeOfNodesContext.Provider
-            value={{
-              id: 'test-tree',
-              nodeList: mockNodes,
-              expandedNodes: mockNodes.map((n) => n.id),
-              onAddChild: mockAdd,
-              handleSelect: mockSelect,
-              handleExpandClick: mockExpand,
-              selectedId: 4,
-            }}
-          >
-            <TreeNode
-              id={4}
-              canAddChildren={true}
-            />
-          </TreeOfNodesContext.Provider>
-        </ContextMenuProvider>,
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            expandedNodes: mockNodes.map((n) => n.id),
+            onAddChild: mockAdd,
+            handleSelect: mockSelect,
+            handleExpandClick: mockExpand,
+            selectedId: 4,
+          }}
+        >
+          <TreeNode
+            id={4}
+            canAddChildren={true}
+          />
+        </TreeOfNodesContext.Provider>,
         { container },
       );
     });
