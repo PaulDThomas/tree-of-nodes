@@ -72,6 +72,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           />
         )}
         <input
+          autoFocus
           id={String(id)}
           ref={ref}
           type='text'
