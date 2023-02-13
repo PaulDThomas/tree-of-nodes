@@ -1,7 +1,7 @@
 import { Key } from 'react';
 import { TreeNodeBase } from '../components/interface';
 
-export const getParents = (
+export const getAncestors = (
   id: Key,
   included: TreeNodeBase[],
   hierarchyNodes: TreeNodeBase[],
@@ -9,16 +9,14 @@ export const getParents = (
   // Get current node
   const current = hierarchyNodes.find((h) => h.id === id);
   if (current === undefined) return [];
-  // Set return as children, current node or parent's return
-  const ret =
-    current.parentId === undefined ||
-    current.parentId === null ||
-    hierarchyNodes.findIndex((h) => h.id === current?.parentId) === -1
-      ? [...included, current]
-      : getParents(
-          current.parentId,
-          [...included.filter((c) => c.id !== current.parentId && c.id !== current.id), current],
-          hierarchyNodes,
-        );
-  return ret;
+  // Get parent node
+  const parent = hierarchyNodes.find((h) => h.id === current.parentId);
+  // Stop if no more parents
+  return parent === undefined
+    ? included
+    : getAncestors(
+        parent.id,
+        [...included.filter((i) => i.id !== parent.id), parent],
+        hierarchyNodes,
+      );
 };

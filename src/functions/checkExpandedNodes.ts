@@ -1,6 +1,6 @@
 import { TreeNodeBase } from 'components';
 import { Key } from 'react';
-import { getParents } from './getParents';
+import { getAncestors } from './getParents';
 
 export const checkExpandedNodes = (
   nodeList: TreeNodeBase[],
@@ -9,7 +9,7 @@ export const checkExpandedNodes = (
 ): Key[] => {
   return [
     ...expandedNodes,
-    ...getParents(selectedId, [], nodeList)
+    ...getAncestors(selectedId, [], nodeList)
       .map((n) => n.id)
       .filter((k) => !expandedNodes.includes(k)),
   ].sort((a, b) => `${a}`.localeCompare(`${b}`));

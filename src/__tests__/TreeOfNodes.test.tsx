@@ -1,4 +1,4 @@
-import { queryByAttribute, render, screen } from '@testing-library/react';
+import { queryByAttribute, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TreeOfNodes } from '../components/TreeOfNodes';
 import { mockNodes } from '../__mocks__/mockNodes';

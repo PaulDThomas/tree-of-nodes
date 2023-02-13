@@ -11,6 +11,8 @@ export interface TreeOfNodesContextProps<T> {
   onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRename?: (id: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (id: Key) => Promise<iNodeUpdate>;
+  nodeHighlight: string;
+  textHighlight: string;
 }
 
 export const TreeOfNodesContext = createContext<TreeOfNodesContextProps<unknown> | undefined>(

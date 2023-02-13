@@ -25,6 +25,8 @@ describe('Tree node', () => {
             expandedNodes: [],
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode id={0} />
@@ -53,6 +55,8 @@ describe('Tree node', () => {
             onRename: mockRename,
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode
@@ -92,6 +96,8 @@ describe('Tree node', () => {
             onRename: mockRename,
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode
@@ -139,6 +145,8 @@ describe('Tree node', () => {
             selectedId: 4,
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode
@@ -180,6 +188,8 @@ describe('Tree node', () => {
             handleSelect: mockSelect,
             handleExpandClick: mockExpand,
             selectedId: 4,
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode
@@ -230,6 +240,8 @@ describe('Tree node', () => {
             handleSelect: mockSelect,
             handleExpandClick: mockExpand,
             selectedId: 4,
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
           }}
         >
           <TreeNode

@@ -6,6 +6,7 @@ import {
   CaretRightFill,
   ExclamationCircleFill,
 } from 'react-bootstrap-icons';
+import { getAncestors } from '../functions/getParents';
 import { iNodeUpdate } from './interface';
 import { TreeOfNodesContext } from './TreeOfNodesContext';
 import { WordEntry } from './WordEntry';
@@ -53,6 +54,13 @@ export const TreeNode = ({
   const currentBorder = useMemo<string>(() => {
     return id === treeContext?.selectedId ? '1px solid black' : '';
   }, [id, treeContext?.selectedId]);
+  const nodeColour = useMemo<string | undefined>(() => {
+    if (treeContext && treeContext.selectedId) {
+      const anc = getAncestors(treeContext.selectedId, [], treeContext?.nodeList).map((n) => n.id);
+      if ([...anc, treeContext.selectedId].includes(id)) return treeContext.nodeHighlight;
+    }
+    return;
+  }, [id, treeContext]);
 
   // New node parameters
   const newNameRef = useRef<HTMLInputElement | null>(null);
@@ -142,9 +150,6 @@ export const TreeNode = ({
       <div
         id={`${treeContext.id}-treenode-${id}`}
         className='treenode'
-        onClickCapture={() => treeContext.handleSelect(id)}
-        onContextMenuCapture={() => treeContext.handleSelect(id)}
-        onFocusCapture={() => treeContext.handleSelect(id)}
       >
         {error ? (
           <>
@@ -156,41 +161,54 @@ export const TreeNode = ({
             {childNodes !== undefined && childNodes.length > 0 ? (
               !expanded ? (
                 <CaretRightFill
-                  role='button'
-                  aria-expanded={false}
                   id={`${treeContext.id}-treenode-caret-${id}`}
+                  role='button'
+                  color={nodeColour}
+                  aria-expanded={false}
                   onClick={() => treeContext.handleExpandClick(id)}
                 />
               ) : (
                 <CaretDownFill
+                  id={`${treeContext.id}-treenode-caret-${id}`}
                   role='button'
                   aria-expanded={true}
-                  id={`${treeContext.id}-treenode-caret-${id}`}
-                  onClick={() => treeContext.handleExpandClick(id)}
+                  color={nodeColour}
+                  onClick={() => {
+                    treeContext.handleExpandClick(id);
+                  }}
                 />
               )
             ) : (
               <CaretRight
+                id={`${treeContext.id}-treenode-caret-${id}`}
                 role='button'
+                color={nodeColour}
                 aria-expanded={false}
                 aria-disabled={true}
               />
             )}
             {thisNode && (
-              <WordEntry
-                id={`${treeContext.id}-treenode-entry-${id}`}
-                ref={currentNameRef}
-                value={thisNode.label}
-                editing={renaming}
-                saving={updatingNode}
-                setValue={(ret) => renameNode(ret)}
-                sendEscape={() => setRenaming(false)}
-                style={{
-                  border: currentBorder,
-                  margin: currentBorder === '' ? '1px' : '',
-                  backgroundColor: currentBorder === '' ? '' : 'lightgrey',
-                }}
-              />
+              <div
+                style={{ display: 'inline-block' }}
+                onContextMenuCapture={() => treeContext.handleSelect(id)}
+                onClickCapture={() => treeContext.handleSelect(id)}
+                onFocusCapture={() => treeContext.handleSelect(id)}
+              >
+                <WordEntry
+                  id={`${treeContext.id}-treenode-entry-${id}`}
+                  ref={currentNameRef}
+                  value={thisNode.label}
+                  editing={renaming}
+                  saving={updatingNode}
+                  setValue={(ret) => renameNode(ret)}
+                  sendEscape={() => setRenaming(false)}
+                  style={{
+                    border: currentBorder,
+                    margin: currentBorder === '' ? '1px' : '',
+                    backgroundColor: currentBorder === '' ? '' : treeContext.textHighlight,
+                  }}
+                />
+              </div>
             )}
           </span>
         )}

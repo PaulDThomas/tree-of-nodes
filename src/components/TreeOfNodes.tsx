@@ -19,6 +19,8 @@ interface TreeOfNodesProps<T> {
   canAddChildren?: boolean;
   canRemoveChildren?: boolean;
   canRenameChildren?: boolean;
+  nodeHighlight?: string;
+  textHighlight?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
@@ -39,6 +41,8 @@ export const TreeOfNodes = <T extends unknown>({
   onAdd,
   onRename,
   onRemove,
+  nodeHighlight = 'red',
+  textHighlight = 'rgba(255, 0, 0, 0.2)',
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   useEffect(() => {
@@ -50,7 +54,7 @@ export const TreeOfNodes = <T extends unknown>({
     }
   }, [expandedNodes, nodeList, selectedId]);
 
-  // Change expansion and update context
+  // Change expansion and update contexts
   const changeExpand = useCallback(
     (eKey: Key, force?: boolean) => {
       const newExpandedNodes = [...expandedNodes];
@@ -74,6 +78,8 @@ export const TreeOfNodes = <T extends unknown>({
         onAddChild: onAdd,
         onRename,
         onRemove,
+        nodeHighlight,
+        textHighlight,
       }}
     >
       {roots.map((r) => (

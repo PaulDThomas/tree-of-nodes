@@ -32,6 +32,8 @@ export const App = () => {
             canRenameChildren
             canRenameRoot
             canRemoveRoot
+            nodeHighlight='blue'
+            textHighlight='rgba(0,255,0,0.4)'
             selectedId={selectedId}
             handleSelect={async (i) => {
               setSelectedId(i);
