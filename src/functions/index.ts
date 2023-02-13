@@ -1,3 +1,3 @@
-import { getParents } from './getParents';
+import { getAncestors } from './getAncestors';
 
-export { getParents };
+export { getAncestors as getParents };

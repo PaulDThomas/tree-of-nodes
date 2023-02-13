@@ -21,6 +21,6 @@
     "jsx": "react-jsx",
     "noImplicitAny": true
   },
-  "include": ["src"],
+  "include": ["src", "demo"],
   "exclude": ["node_modules"]
 }

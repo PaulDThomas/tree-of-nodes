@@ -1,6 +1,5 @@
 import { Key, useCallback, useEffect, useState } from 'react';
 import { checkExpandedNodes } from '../functions/checkExpandedNodes';
-import { ContextMenuProvider } from './ContextMenuProvider';
 import { iNodeUpdate, TreeNodeData } from './interface';
 import { TreeNode } from './TreeNode';
 import { TreeOfNodesContext } from './TreeOfNodesContext';
@@ -20,8 +19,11 @@ interface TreeOfNodesProps<T> {
   canAddChildren?: boolean;
   canRemoveChildren?: boolean;
   canRenameChildren?: boolean;
+  nodeHighlight?: string;
+  textHighlight?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const TreeOfNodes = <T extends unknown>({
   id,
   nodeList,
@@ -39,14 +41,20 @@ export const TreeOfNodes = <T extends unknown>({
   onAdd,
   onRename,
   onRemove,
+  nodeHighlight = 'red',
+  textHighlight = 'rgba(255, 0, 0, 0.2)',
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   useEffect(() => {
-    selectedId !== undefined &&
-      setExpandedNodes(checkExpandedNodes(nodeList, selectedId, expandedNodes));
-  }, []);
+    if (selectedId) {
+      // Check all nodes are showing that should be
+      const shouldExpand = checkExpandedNodes(nodeList, selectedId, expandedNodes);
+      shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0 &&
+        setExpandedNodes(shouldExpand);
+    }
+  }, [expandedNodes, nodeList, selectedId]);
 
-  // Change expansion and update context
+  // Change expansion and update contexts
   const changeExpand = useCallback(
     (eKey: Key, force?: boolean) => {
       const newExpandedNodes = [...expandedNodes];
@@ -59,32 +67,32 @@ export const TreeOfNodes = <T extends unknown>({
   );
 
   return (
-    <ContextMenuProvider>
-      <TreeOfNodesContext.Provider
-        value={{
-          id: id,
-          nodeList,
-          selectedId,
-          handleSelect,
-          expandedNodes,
-          handleExpandClick: (r, f) => changeExpand(r, f),
-          onAddChild: onAdd,
-          onRename,
-          onRemove,
-        }}
-      >
-        {roots.map((r) => (
-          <TreeNode
-            key={r}
-            id={r}
-            canRemove={canRemoveRoot}
-            canAddChildren={canAddChildren}
-            canRename={canRenameRoot}
-            canRemoveChildren={canRemoveChildren}
-            canRenameChildren={canRenameChildren}
-          />
-        ))}
-      </TreeOfNodesContext.Provider>
-    </ContextMenuProvider>
+    <TreeOfNodesContext.Provider
+      value={{
+        id: id,
+        nodeList,
+        selectedId,
+        handleSelect,
+        expandedNodes,
+        handleExpandClick: (r, f) => changeExpand(r, f),
+        onAddChild: onAdd,
+        onRename,
+        onRemove,
+        nodeHighlight,
+        textHighlight,
+      }}
+    >
+      {roots.map((r) => (
+        <TreeNode
+          key={r}
+          id={r}
+          canRemove={canRemoveRoot}
+          canAddChildren={canAddChildren}
+          canRename={canRenameRoot}
+          canRemoveChildren={canRemoveChildren}
+          canRenameChildren={canRenameChildren}
+        />
+      ))}
+    </TreeOfNodesContext.Provider>
   );
 };
