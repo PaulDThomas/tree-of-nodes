@@ -1,5 +1,5 @@
 import { mockNodes } from '../__mocks__/mockNodes';
-import { getAncestors } from '../functions/getParents';
+import { getAncestors } from '../functions/getAncestors';
 
 describe('Test get parents', () => {
   test('Check top level return empty', () => {

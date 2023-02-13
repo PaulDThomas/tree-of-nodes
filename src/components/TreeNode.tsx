@@ -6,7 +6,7 @@ import {
   CaretRightFill,
   ExclamationCircleFill,
 } from 'react-bootstrap-icons';
-import { getAncestors } from '../functions/getParents';
+import { getAncestors } from '../functions/getAncestors';
 import { iNodeUpdate } from './interface';
 import { TreeOfNodesContext } from './TreeOfNodesContext';
 import { WordEntry } from './WordEntry';
