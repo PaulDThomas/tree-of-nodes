@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/PaulDThomas/tree-of-nodes#readme",
   "dependencies": {
     "@asup/context-menu": "^1.0.0",
-    "@swc/helpers": "^0.4.14",
+    "@swc/helpers": "^0.5.1",
     "bootstrap": "^5.2.2",
     "react": "^18.0.0",
     "react-bootstrap": "^2.5.0",
@@ -29,6 +29,7 @@
     "react-dom": "^18.0.0"
   },
   "peerDependencies": {
+    "@swc/helpers": "^0.5.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
@@ -39,7 +40,7 @@
     "@parcel/transformer-typescript-types": "^2.8.0",
     "@parcel/transformer-webmanifest": "^2.7.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.2.2",
     "@types/node": "^18.11.9",
@@ -63,7 +64,7 @@
     "process": "^0.11.10",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
+    "typescript": "^5.0.4"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
