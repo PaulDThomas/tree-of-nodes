@@ -92,3 +92,5 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     );
   },
 );
+
+WordEntry.displayName = 'WordEntry';

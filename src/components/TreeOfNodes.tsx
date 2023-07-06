@@ -96,3 +96,5 @@ export const TreeOfNodes = <T extends unknown>({
     </TreeOfNodesContext.Provider>
   );
 };
+
+TreeOfNodes.displayName = 'TreeOfNodes';
