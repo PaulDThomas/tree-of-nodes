@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
