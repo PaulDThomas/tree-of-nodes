@@ -50,14 +50,14 @@ export const TreeNode = ({
     return (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
   }, [id, treeContext?.expandedNodes]);
 
-  // // Apply selected borer
+  // Apply selected border
   const currentBorder = useMemo<string>(() => {
-    return id === treeContext?.selectedId ? '1px solid black' : '';
-  }, [id, treeContext?.selectedId]);
+    return treeContext?.selected.includes(id) ? '1px solid black' : '';
+  }, [id, treeContext?.selected]);
   const nodeColour = useMemo<string | undefined>(() => {
-    if (treeContext && treeContext.selectedId) {
-      const anc = getAncestors(treeContext.selectedId, [], treeContext?.nodeList).map((n) => n.id);
-      if ([...anc, treeContext.selectedId].includes(id)) return treeContext.nodeHighlight;
+    if (treeContext && treeContext.selected) {
+      const anc = getAncestors(treeContext.selected, [], treeContext?.nodeList).map((n) => n.id);
+      if ([...anc, treeContext.selected].includes(id)) return treeContext.nodeHighlight;
     }
     return;
   }, [id, treeContext]);

@@ -8,12 +8,12 @@ interface TreeOfNodesProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
-  selectedId?: Key;
+  multiSelect?: boolean;
+  selected?: Key[];
   handleSelect?: (ret: Key) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (childId: Key) => Promise<iNodeUpdate>;
-  canAddRoot?: boolean;
   canRemoveRoot?: boolean;
   canRenameRoot?: boolean;
   canAddChildren?: boolean;
@@ -28,13 +28,12 @@ export const TreeOfNodes = <T extends unknown>({
   id,
   nodeList,
   roots,
-  // canAddRoot = false,
   canRemoveRoot = false,
   canRenameRoot = false,
   canAddChildren = false,
   canRemoveChildren = false,
   canRenameChildren = false,
-  selectedId,
+  selected = [],
   handleSelect = () => {
     return;
   },
@@ -46,13 +45,13 @@ export const TreeOfNodes = <T extends unknown>({
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   useEffect(() => {
-    if (selectedId) {
+    if (selected.length > 0) {
       // Check all nodes are showing that should be
-      const shouldExpand = checkExpandedNodes(nodeList, selectedId, expandedNodes);
+      const shouldExpand = checkExpandedNodes(nodeList, selected, expandedNodes);
       shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0 &&
         setExpandedNodes(shouldExpand);
     }
-  }, [expandedNodes, nodeList, selectedId]);
+  }, [expandedNodes, nodeList, selected]);
 
   // Change expansion and update contexts
   const changeExpand = useCallback(
@@ -71,7 +70,7 @@ export const TreeOfNodes = <T extends unknown>({
       value={{
         id: id,
         nodeList,
-        selectedId,
+        selected,
         handleSelect,
         expandedNodes,
         handleExpandClick: (r, f) => changeExpand(r, f),

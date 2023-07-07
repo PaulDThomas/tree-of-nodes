@@ -6,7 +6,7 @@ import { mockNodes } from '../../src/__mocks__/mockNodes';
 export const App = () => {
   const [nodeList, setNodeList] =
     useState<TreeNodeData<{ value: number } | number | undefined>[]>(mockNodes);
-  const [selectedId, setSelectedId] = useState<Key>(2);
+  const [selected, setSelected] = useState<Key[]>([2]);
 
   return (
     <Container>
@@ -34,9 +34,9 @@ export const App = () => {
             canRemoveRoot
             nodeHighlight='blue'
             textHighlight='rgba(0,255,0,0.4)'
-            selectedId={selectedId}
+            selected={selected}
             handleSelect={async (i) => {
-              setSelectedId(i);
+              setSelected([i]);
             }}
             onAdd={async (p, n) => {
               const newId =

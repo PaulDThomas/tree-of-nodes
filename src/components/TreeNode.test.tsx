@@ -1,7 +1,7 @@
 import { act, fireEvent, queryByAttribute, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TreeNode } from '../components/TreeNode';
-import { TreeOfNodesContext } from '../components/TreeOfNodesContext';
+import { TreeNode } from './TreeNode';
+import { TreeOfNodesContext } from './TreeOfNodesContext';
 import { mockNodes } from '../__mocks__/mockNodes';
 
 const getById = queryByAttribute.bind(null, 'id');
@@ -22,6 +22,7 @@ describe('Tree node', () => {
           value={{
             id: 'test-tree',
             nodeList: mockNodes,
+            selected: [],
             expandedNodes: [],
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
@@ -51,6 +52,7 @@ describe('Tree node', () => {
           value={{
             id: 'test-tree',
             nodeList: mockNodes,
+            selected: [],
             expandedNodes: mockNodes.map((n) => n.id),
             onRename: mockRename,
             handleSelect: jest.fn(),
@@ -92,6 +94,7 @@ describe('Tree node', () => {
           value={{
             id: 'test-tree',
             nodeList: mockNodes,
+            selected: [],
             expandedNodes: mockNodes.map((n) => n.id),
             onRename: mockRename,
             handleSelect: jest.fn(),
@@ -142,7 +145,7 @@ describe('Tree node', () => {
             nodeList: mockNodes,
             expandedNodes: mockNodes.map((n) => n.id),
             onRemove: mockRemove,
-            selectedId: 4,
+            selected: [4],
             handleSelect: jest.fn(),
             handleExpandClick: jest.fn(),
             nodeHighlight: 'black',
@@ -183,11 +186,11 @@ describe('Tree node', () => {
           value={{
             id: 'test-tree',
             nodeList: mockNodes,
+            selected: [4],
             expandedNodes: mockNodes.map((n) => n.id),
             onAddChild: mockAdd,
             handleSelect: mockSelect,
             handleExpandClick: mockExpand,
-            selectedId: 4,
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
           }}
@@ -235,11 +238,11 @@ describe('Tree node', () => {
           value={{
             id: 'test-tree',
             nodeList: mockNodes,
+            selected: [4],
             expandedNodes: mockNodes.map((n) => n.id),
             onAddChild: mockAdd,
             handleSelect: mockSelect,
             handleExpandClick: mockExpand,
-            selectedId: 4,
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
           }}
