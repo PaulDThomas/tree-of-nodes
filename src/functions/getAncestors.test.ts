@@ -1,7 +1,7 @@
 import { mockNodes } from '../__mocks__/mockNodes';
-import { getAncestors } from '../functions/getAncestors';
+import { getAncestors } from './getAncestors';
 
-describe('Test get parents', () => {
+describe('Test getAncestors', () => {
   test('Check top level return empty', () => {
     expect(getAncestors(0, [], mockNodes)).toEqual([]);
   });
@@ -25,8 +25,26 @@ describe('Test get parents', () => {
   expect(getAncestors('B', [mockNodes[1]], mockNodes)).toEqual([mockNodes[1], mockNodes[0]]);
 });
 
-describe('Test Get hierarchy parents badly', () => {
+describe('Test getAncestors parents badly', () => {
   test('Check missing node', () => {
     expect(getAncestors(34, [], mockNodes)).toEqual([]);
+  });
+});
+
+describe('Text multiple getAncestors', () => {
+  test('Check multi', async () => {
+    expect(getAncestors([3, 'Z'], [], mockNodes)).toEqual([
+      mockNodes[6],
+      mockNodes[3],
+      mockNodes[0],
+    ]);
+  });
+
+  test('Check multi including', async () => {
+    expect(getAncestors([3, 'Z', 0], [], mockNodes)).toEqual([
+      mockNodes[6],
+      mockNodes[3],
+      mockNodes[0],
+    ]);
   });
 });

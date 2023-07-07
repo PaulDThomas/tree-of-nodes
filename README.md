@@ -34,17 +34,19 @@ import '@asup/tree-of-nodes/dist/style.css';
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
-  selectedId?: Key;
+  multiSelect?: boolean;
+  selectedIds?: Key[];
   handleSelect?: (ret: Key) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (childId: Key) => Promise<iNodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
-  canAddRoot?: boolean;
   canRemoveRoot?: boolean;
   canRenameRoot?: boolean;
   canAddChildren?: boolean;
   canRemoveChildren?: boolean;
   canRenameChildren?: boolean;
+  nodeHighlight?: string;
+  textHighlight?: string;
   />
 ```
 
@@ -52,22 +54,24 @@ The component expects a list of nodes of type `TreeNodeData<T>` with unique `Key
 
 ## Properties
 
-| Prop              | Description                                                                                     |      Default      |
-| :---------------- | :---------------------------------------------------------------------------------------------- | :---------------: |
-| id                | HTML id attribute                                                                               |                   |
-| nodeList          | Array of node data                                                                              |                   |
-| roots             | One or more node Keys to use as the root of the tree                                            |
-| selectedId        | Currently selectedId                                                                            |                   |
-| handleSelect      | Function called when a node is clicked (selected), this should be used to update the selectedId | `() => {return;}` |
-| onAdd             | Function called when a new node is added, this should be used to update the nodeList            |                   |
-| onRemove          | Function called when a node is removed, this should be used to update the nodeList              |                   |
-| onRename          | Function called when a node is renamed, this should be used to update the nodeList              |                   |
-| ~~canAddRoot~~    | Not currently implemented                                                                       |                   |
-| canRemoveRoot     | Allows removal of a root node in combination with specification of onRemove function            |      `false`      |
-| canRenameRoot     | Allows renaming of a root node in combination with specification of onRename function           |      `false`      |
-| canAddChildren    | Allows addition of children in combination with specification of onAdd function                 |      `false`      |
-| canRemoveChildren | Allows renaming of non-root nodes in combination with specification of onRemove function        |      `false`      |
-| canRenameChildren | Allows renaming of non-root nodes in combination with specification of onRename function        |      `false`      |
+| Prop              | Description                                                                                     |      Default       |
+| :---------------- | :---------------------------------------------------------------------------------------------- | :----------------: |
+| id                | HTML id attribute                                                                               |                    |
+| nodeList          | Array of node data                                                                              |                    |
+| roots             | One or more node Keys to use as the root of the tree                                            |                    |
+| multiSelect       | Allow selection of more than 1 id                                                               |      `false`       |
+| selectedIds       | Currently selected list                                                                         |                    |
+| handleSelect      | Function called when a node is clicked (selected), this should be used to update the selectedId | `() => {return;}`  |
+| onAdd             | Function called when a new node is added, this should be used to update the nodeList            |                    |
+| onRemove          | Function called when a node is removed, this should be used to update the nodeList              |                    |
+| onRename          | Function called when a node is renamed, this should be used to update the nodeList              |                    |
+| canRemoveRoot     | Allows removal of a root node in combination with specification of onRemove function            |      `false`       |
+| canRenameRoot     | Allows renaming of a root node in combination with specification of onRename function           |      `false`       |
+| canAddChildren    | Allows addition of children in combination with specification of onAdd function                 |      `false`       |
+| canRemoveChildren | Allows renaming of non-root nodes in combination with specification of onRemove function        |      `false`       |
+| canRenameChildren | Allows renaming of non-root nodes in combination with specification of onRename function        |      `false`       |
+| nodeHighlight     | Selected node highlight colour                                                                  |       `red`        |
+| textHighlight     | Selected text highlight colour                                                                  | `rgba(255,0,0,0.2` |
 
 ### TreeNodeData
 
@@ -92,46 +96,3 @@ export interface iNodeUpdate {
   ErrorText?: string;
 }
 ```
-
-## Context Menu Usage
-
-Inbuilt context menu provider, takes a list of available actions and renders a context menu on appropriate click.
-
-```
-import { ContextMenuProvider, iMenuItem, MenuContext } from '@asup/tree-of-nodes';
-import '@asup/tree-of-nodes/dist/style.css';
-
-... inside REACT component
-
-<ContextMenuProvider>
-
-  <SomeChild
-
-    const menuContext = useContext(MenuContext);
-    const showMenu = useCallback((e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const menuItems: iMenuItem[] = [
-        { label: 'Item 1', action: item1Function },
-        { label: 'Item 2', action: item2Function },
-        ...
-      ];
-      menuContext.set && menuContext.set({
-          visible: true,
-          y: e.pageY,
-          x: e.pageX,
-          menuItems: menuItems,
-        });
-    },
-    [...]);
-
-    return (
-      <div onContextMenu={showMenu}>
-      </div>
-    );
-  >
-
-</ContextMenuProvider>
-```
-
-Add an `onContextMenu` action to an element inside the `ContextMenuProvider`, and create a corresponding function that loads the menuItems array and then sets it to visible.
