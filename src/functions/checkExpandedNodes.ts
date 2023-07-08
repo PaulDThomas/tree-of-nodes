@@ -4,12 +4,12 @@ import { getAncestors } from './getAncestors';
 
 export const checkExpandedNodes = (
   nodeList: TreeNodeBase[],
-  selectedId: Key,
+  selected: Key | Key[],
   expandedNodes: Key[],
 ): Key[] => {
   return [
     ...expandedNodes,
-    ...getAncestors(selectedId, [], nodeList)
+    ...getAncestors(selected, [], nodeList)
       .map((n) => n.id)
       .filter((k) => !expandedNodes.includes(k)),
   ].sort((a, b) => `${a}`.localeCompare(`${b}`));

@@ -37,6 +37,8 @@ const config: Config = {
   moduleNameMapper: {
     '\\.(css|less)$': '<rootDir>/src/__mocks__/styleMock.ts',
   },
+  // Plugin for watch patterns
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
 };
 
 export default config;

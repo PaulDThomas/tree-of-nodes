@@ -34,40 +34,44 @@ import '@asup/tree-of-nodes/dist/style.css';
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
-  selectedId?: Key;
-  handleSelect?: (ret: Key) => void;
+  multiSelect?: boolean;
+  selectedIds?: Key | Key[];
+  handleSelect?: (ret: Key | Key []) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (childId: Key) => Promise<iNodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
-  canAddRoot?: boolean;
   canRemoveRoot?: boolean;
   canRenameRoot?: boolean;
   canAddChildren?: boolean;
   canRemoveChildren?: boolean;
   canRenameChildren?: boolean;
+  nodeHighlight?: string;
+  textHighlight?: string;
   />
 ```
 
-The component expects a list of nodes of type `TreeNodeData<T>` with unique `Key`s.
+The component expects a list of nodes of type `TreeNodeData<T>` with unique `React.Key`s.
 
 ## Properties
 
-| Prop              | Description                                                                                     |      Default      |
-| :---------------- | :---------------------------------------------------------------------------------------------- | :---------------: |
-| id                | HTML id attribute                                                                               |                   |
-| nodeList          | Array of node data                                                                              |                   |
-| roots             | One or more node Keys to use as the root of the tree                                            |
-| selectedId        | Currently selectedId                                                                            |                   |
-| handleSelect      | Function called when a node is clicked (selected), this should be used to update the selectedId | `() => {return;}` |
-| onAdd             | Function called when a new node is added, this should be used to update the nodeList            |                   |
-| onRemove          | Function called when a node is removed, this should be used to update the nodeList              |                   |
-| onRename          | Function called when a node is renamed, this should be used to update the nodeList              |                   |
-| ~~canAddRoot~~    | Not currently implemented                                                                       |                   |
-| canRemoveRoot     | Allows removal of a root node in combination with specification of onRemove function            |      `false`      |
-| canRenameRoot     | Allows renaming of a root node in combination with specification of onRename function           |      `false`      |
-| canAddChildren    | Allows addition of children in combination with specification of onAdd function                 |      `false`      |
-| canRemoveChildren | Allows renaming of non-root nodes in combination with specification of onRemove function        |      `false`      |
-| canRenameChildren | Allows renaming of non-root nodes in combination with specification of onRename function        |      `false`      |
+| Prop              | Description                                                                                     |      Default       |
+| :---------------- | :---------------------------------------------------------------------------------------------- | :----------------: |
+| id                | HTML id attribute                                                                               |                    |
+| nodeList          | Array of node data                                                                              |                    |
+| roots             | One or more node Keys to use as the root of the tree                                            |                    |
+| multiSelect       | Allow selection of more than 1 id                                                               |      `false`       |
+| selectedIds       | Currently selected list                                                                         |                    |
+| handleSelect      | Function called when a node is clicked (selected), this should be used to update the selectedId | `() => {return;}`  |
+| onAdd             | Function called when a new node is added, this should be used to update the nodeList            |                    |
+| onRemove          | Function called when a node is removed, this should be used to update the nodeList              |                    |
+| onRename          | Function called when a node is renamed, this should be used to update the nodeList              |                    |
+| canRemoveRoot     | Allows removal of a root node in combination with specification of onRemove function            |      `false`       |
+| canRenameRoot     | Allows renaming of a root node in combination with specification of onRename function           |      `false`       |
+| canAddChildren    | Allows addition of children in combination with specification of onAdd function                 |      `false`       |
+| canRemoveChildren | Allows renaming of non-root nodes in combination with specification of onRemove function        |      `false`       |
+| canRenameChildren | Allows renaming of non-root nodes in combination with specification of onRename function        |      `false`       |
+| nodeHighlight     | Selected node highlight colour                                                                  |       `red`        |
+| textHighlight     | Selected text highlight colour                                                                  | `rgba(255,0,0,0.2` |
 
 ### TreeNodeData
 
@@ -93,45 +97,55 @@ export interface iNodeUpdate {
 }
 ```
 
-## Context Menu Usage
+# Handling clicks
 
-Inbuilt context menu provider, takes a list of available actions and renders a context menu on appropriate click.
+Context menu clicks on a node will result in a context menu being displayed with "Add", "Rename" and "Delete" options being displayed.
+
+Clicks on an expander will either expand or close the node's clidren
+
+Clicks on a name will select that item
+
+Clicks on a checkbox will select that item and all its descendents.
+
+## Single item selection
+
+To handle one (and only one) item being selected, it is suggested to use these base options
 
 ```
-import { ContextMenuProvider, iMenuItem, MenuContext } from '@asup/tree-of-nodes';
-import '@asup/tree-of-nodes/dist/style.css';
-
-... inside REACT component
-
-<ContextMenuProvider>
-
-  <SomeChild
-
-    const menuContext = useContext(MenuContext);
-    const showMenu = useCallback((e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const menuItems: iMenuItem[] = [
-        { label: 'Item 1', action: item1Function },
-        { label: 'Item 2', action: item2Function },
-        ...
-      ];
-      menuContext.set && menuContext.set({
-          visible: true,
-          y: e.pageY,
-          x: e.pageX,
-          menuItems: menuItems,
-        });
-    },
-    [...]);
-
-    return (
-      <div onContextMenu={showMenu}>
-      </div>
-    );
-  >
-
-</ContextMenuProvider>
+  <TreeOfNodes<T>
+    id={'...'}
+    nodeList={[...]}
+    roots={[...]}
+    selected={selected}
+    handleSelect={async (i) => {
+      setSelected([i]);
+    }}
+  />
 ```
 
-Add an `onContextMenu` action to an element inside the `ContextMenuProvider`, and create a corresponding function that loads the menuItems array and then sets it to visible.
+## Multiple item selection
+
+To handle multiple selections, it is suggested to use these base options
+
+```
+  <TreeOfNodes<T>
+    id={'...'}
+    nodeList={[...]}
+    roots={[...]}
+    showCheckBox
+    selected={selected}
+    handleSelect={async (i) => {
+      if (Array.isArray(i)) {
+        setSelected(
+          selected.includes(i[0])
+            ? selected.filter((s) => !i.includes(s))
+            : [...selected, ...i.filter((n) => !selected.includes(n))],
+        );
+      } else {
+        setSelected(
+          selected.includes(i) ? selected.filter((s) => s !== i) : [...selected, i],
+        );
+      }
+    }}
+  />
+```

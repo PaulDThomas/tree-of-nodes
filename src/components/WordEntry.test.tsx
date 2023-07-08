@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { WordEntry } from '../components/WordEntry';
+import { WordEntry } from './WordEntry';
 
 describe('Word entry', () => {
   test('Read only render', async () => {

@@ -4,8 +4,9 @@ import { iNodeUpdate, TreeNodeData } from './interface';
 export interface TreeOfNodesContextProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
-  selectedId?: Key;
-  handleSelect: (ret: Key) => void;
+  selected: Key[];
+  showCheckBox: boolean;
+  handleSelect: (ret: Key | Key[]) => void;
   expandedNodes: Key[];
   handleExpandClick: (ret: Key, force?: boolean) => void;
   onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;

@@ -10,6 +10,8 @@ import { getAncestors } from '../functions/getAncestors';
 import { iNodeUpdate } from './interface';
 import { TreeOfNodesContext } from './TreeOfNodesContext';
 import { WordEntry } from './WordEntry';
+import './TreeNode.css';
+import { getDescendentIds } from '../functions/getDescendentIds';
 
 interface TreeNodeProps {
   id: Key;
@@ -42,22 +44,43 @@ export const TreeNode = ({
     () => treeContext?.nodeList.filter((n) => n.parentId === id),
     [id, treeContext?.nodeList],
   );
+  const descendents = useMemo(
+    () => getDescendentIds(id, treeContext?.nodeList ?? []),
+    [id, treeContext],
+  );
 
   // State
   const [error, setError] = useState<boolean>(false);
-  const [errorText, setErrotText] = useState<string | null>(null);
+  const [errorText, setErrotText] = useState<string>('');
   const expanded = useMemo(() => {
     return (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
   }, [id, treeContext?.expandedNodes]);
 
-  // // Apply selected borer
+  // Checkbox
+  const checkRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (checkRef.current) {
+      if (treeContext?.selected.includes(id)) {
+        checkRef.current.checked = true;
+        checkRef.current.indeterminate = false;
+      } else if (descendents.some((d) => treeContext?.selected.includes(d))) {
+        checkRef.current.checked = false;
+        checkRef.current.indeterminate = true;
+      } else {
+        checkRef.current.checked = false;
+        checkRef.current.indeterminate = false;
+      }
+    }
+  }, [descendents, id, treeContext?.selected]);
+
+  // Apply selected border
   const currentBorder = useMemo<string>(() => {
-    return id === treeContext?.selectedId ? '1px solid black' : '';
-  }, [id, treeContext?.selectedId]);
+    return treeContext?.selected.includes(id) ? '1px solid black' : '';
+  }, [id, treeContext?.selected]);
   const nodeColour = useMemo<string | undefined>(() => {
-    if (treeContext && treeContext.selectedId) {
-      const anc = getAncestors(treeContext.selectedId, [], treeContext?.nodeList).map((n) => n.id);
-      if ([...anc, treeContext.selectedId].includes(id)) return treeContext.nodeHighlight;
+    if (treeContext && treeContext.selected) {
+      const anc = getAncestors(treeContext.selected, [], treeContext?.nodeList).map((n) => n.id);
+      if ([...anc, treeContext.selected].includes(id)) return treeContext.nodeHighlight;
     }
     return;
   }, [id, treeContext]);
@@ -79,7 +102,7 @@ export const TreeNode = ({
       setErrotText(ret.ErrorText ?? 'An unknown error has occured');
     } else {
       setError(false);
-      setErrotText(null);
+      setErrotText('');
     }
   }, []);
 
@@ -153,25 +176,40 @@ export const TreeNode = ({
       >
         {error ? (
           <>
-            <ExclamationCircleFill color='var(--bs-danger)' />{' '}
-            {errorText && errorText !== '' ? errorText : 'An unknown error has occured'}
+            <ExclamationCircleFill color='var(--bs-danger)' /> {errorText}
           </>
         ) : (
-          <span>
+          <div className='tree-of-nodes-node'>
+            {treeContext.showCheckBox && (
+              <input
+                ref={checkRef}
+                type='checkbox'
+                role='checkbox'
+                className='tree-of-nodes-checkbox'
+                id={`${treeContext.id}-treenode-checkbox-${id}}`}
+                onClick={() => {
+                  treeContext.handleSelect(descendents);
+                }}
+              />
+            )}
             {childNodes !== undefined && childNodes.length > 0 ? (
               !expanded ? (
                 <CaretRightFill
                   id={`${treeContext.id}-treenode-caret-${id}`}
+                  className='tree-of-nodes-expander'
                   role='button'
                   color={nodeColour}
                   aria-expanded={false}
+                  aria-label='Expander'
                   onClick={() => treeContext.handleExpandClick(id)}
                 />
               ) : (
                 <CaretDownFill
                   id={`${treeContext.id}-treenode-caret-${id}`}
+                  className='tree-of-nodes-expander'
                   role='button'
                   aria-expanded={true}
+                  aria-label='Expander'
                   color={nodeColour}
                   onClick={() => {
                     treeContext.handleExpandClick(id);
@@ -181,9 +219,11 @@ export const TreeNode = ({
             ) : (
               <CaretRight
                 id={`${treeContext.id}-treenode-caret-${id}`}
+                className='tree-of-nodes-expander'
                 role='button'
                 color={nodeColour}
                 aria-expanded={false}
+                aria-label='Disabled expander'
                 aria-disabled={true}
               />
             )}
@@ -210,7 +250,7 @@ export const TreeNode = ({
                 />
               </div>
             )}
-          </span>
+          </div>
         )}
         {childNodes !== undefined &&
           childNodes.map((h) => (

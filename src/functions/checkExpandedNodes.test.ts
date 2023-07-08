@@ -1,4 +1,4 @@
-import { checkExpandedNodes } from '../functions/checkExpandedNodes';
+import { checkExpandedNodes } from './checkExpandedNodes';
 import { mockNodes } from '../__mocks__/mockNodes';
 
 describe('Test checkExpandedNodes', () => {
