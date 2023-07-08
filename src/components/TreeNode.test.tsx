@@ -8,7 +8,14 @@ const getById = queryByAttribute.bind(null, 'id');
 
 describe('Tree node', () => {
   test('Empty render', async () => {
-    const { container } = render(<TreeNode id={'test'} />);
+    await act(async () => {
+      render(
+        <div data-testid='container'>
+          <TreeNode id={'test'} />
+        </div>,
+      );
+    });
+    const container = screen.queryByTestId('container') as HTMLDivElement;
     const tn = container.querySelector('#tree-of-nodes-treenode-test') as HTMLElement;
     expect(tn).not.toBeInTheDocument();
   });
@@ -28,6 +35,7 @@ describe('Tree node', () => {
             handleExpandClick: jest.fn(),
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: false,
           }}
         >
           <TreeNode id={0} />
@@ -37,6 +45,8 @@ describe('Tree node', () => {
     });
     const tn = container.querySelector('#test-tree-treenode-0') as HTMLElement;
     expect(tn).toBeInTheDocument();
+    const check = screen.queryByRole('checkbox');
+    expect(check).not.toBeInTheDocument();
   });
 
   test('Context menu actions, nowt', async () => {
@@ -59,6 +69,7 @@ describe('Tree node', () => {
             handleExpandClick: jest.fn(),
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: false,
           }}
         >
           <TreeNode
@@ -81,7 +92,7 @@ describe('Tree node', () => {
     await user.click(child);
   });
 
-  test('Context menu actions, rename', async () => {
+  test('Context menu actions, rename + escape', async () => {
     const user = userEvent.setup();
     const mockRename = jest.fn(async () => {
       return { success: true };
@@ -101,6 +112,7 @@ describe('Tree node', () => {
             handleExpandClick: jest.fn(),
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: false,
           }}
         >
           <TreeNode
@@ -125,7 +137,26 @@ describe('Tree node', () => {
     await act(async () => {
       await user.clear(rootInput as HTMLInputElement);
       await user.type(rootInput as HTMLInputElement, 'new name');
-      fireEvent.blur(rootInput as HTMLInputElement);
+      await user.keyboard('{Escape}');
+    });
+    expect(screen.queryByText('new name')).not.toBeInTheDocument();
+    expect(mockRename).not.toBeCalled();
+
+    const we2 = screen.getByText('Root');
+    expect(we2).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.contextMenu(we2);
+    });
+    const ren2 = screen.getByText('Rename');
+    expect(ren2).toBeInTheDocument();
+    await user.click(ren2);
+    const rootInput2 = getById(container, 'test-tree-treenode-entry-0');
+    expect(rootInput2).toBeInTheDocument();
+    expect(rootInput2?.tagName).toEqual('INPUT');
+    await act(async () => {
+      await user.clear(rootInput2 as HTMLInputElement);
+      await user.type(rootInput2 as HTMLInputElement, 'new name');
+      fireEvent.blur(rootInput2 as HTMLInputElement);
     });
     expect(mockRename).toHaveBeenCalledWith(0, 'new name');
   });
@@ -150,6 +181,7 @@ describe('Tree node', () => {
             handleExpandClick: jest.fn(),
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: false,
           }}
         >
           <TreeNode
@@ -193,6 +225,7 @@ describe('Tree node', () => {
             handleExpandClick: mockExpand,
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: false,
           }}
         >
           <TreeNode
@@ -245,6 +278,7 @@ describe('Tree node', () => {
             handleExpandClick: mockExpand,
             nodeHighlight: 'black',
             textHighlight: 'lightgrey',
+            showCheckBox: true,
           }}
         >
           <TreeNode
@@ -255,6 +289,8 @@ describe('Tree node', () => {
         { container },
       );
     });
+    expect(screen.queryByLabelText('Disabled expander')).toBeInTheDocument();
+
     const we = screen.getByText('One.Four');
     expect(we).toBeInTheDocument();
     await act(async () => {
@@ -273,5 +309,136 @@ describe('Tree node', () => {
     });
     expect(mockAdd).not.toHaveBeenCalledWith(4, 'new name');
     expect(newNode).not.toBeInTheDocument();
+  });
+
+  //   test('Check with no children unselected', async () => {
+  //     const user = userEvent.setup();
+  //     const mockAdd = jest.fn(async () => {
+  //       return { success: true };
+  //     });
+  //     const mockSelect = jest.fn();
+  //     const mockExpand = jest.fn();
+  //     await act(async () => {
+  //       render(
+  //         <TreeOfNodesContext.Provider
+  //           value={{
+  //             id: 'test-tree',
+  //             nodeList: mockNodes,
+  //             selected: [],
+  //             expandedNodes: [],
+  //             onAddChild: mockAdd,
+  //             handleSelect: mockSelect,
+  //             handleExpandClick: mockExpand,
+  //             nodeHighlight: 'black',
+  //             textHighlight: 'lightgrey',
+  //             showCheckBox: true,
+  //           }}
+  //         >
+  //           <div data-testid='container'>
+  //             <TreeNode
+  //               id={4}
+  //               canAddChildren={true}
+  //             />
+  //           </div>
+  //         </TreeOfNodesContext.Provider>,
+  //       );
+  //     });
+  //     const check = screen.queryByRole('checkbox') as HTMLInputElement;
+  //     expect(check).toBeInTheDocument();
+  //     expect(check.checked).toEqual(false);
+  //     await user.click(check);
+  //     expect(mockSelect).toHaveBeenCalledWith([4]);
+  //   });
+  // });
+
+  test('Check with children hidden, unselected', async () => {
+    const user = userEvent.setup();
+    const mockAdd = jest.fn(async () => {
+      return { success: true };
+    });
+    const mockSelect = jest.fn();
+    const mockExpand = jest.fn();
+    await act(async () => {
+      render(
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            selected: [],
+            expandedNodes: [],
+            onAddChild: mockAdd,
+            handleSelect: mockSelect,
+            handleExpandClick: mockExpand,
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
+            showCheckBox: true,
+          }}
+        >
+          <div data-testid='container'>
+            <TreeNode
+              id={1}
+              canAddChildren={true}
+            />
+          </div>
+        </TreeOfNodesContext.Provider>,
+      );
+    });
+    // Click on checkbox
+    const check = screen.queryByRole('checkbox') as HTMLInputElement;
+    expect(check).toBeInTheDocument();
+    expect(check.checked).toEqual(false);
+    await user.click(check);
+    expect(mockSelect).toHaveBeenCalledWith([1, 2, 3, 4]);
+    // Click on expander
+    const exp = screen.queryByLabelText('Expander') as Element;
+    expect(exp).toBeInTheDocument();
+    await user.click(exp);
+    expect(mockExpand).toBeCalledWith(1);
+  });
+
+  test('Check with children shown, selected', async () => {
+    const user = userEvent.setup();
+    const mockAdd = jest.fn(async () => {
+      return { success: true };
+    });
+    const mockSelect = jest.fn();
+    const mockExpand = jest.fn();
+    await act(async () => {
+      render(
+        <TreeOfNodesContext.Provider
+          value={{
+            id: 'test-tree',
+            nodeList: mockNodes,
+            selected: [4],
+            expandedNodes: [1],
+            onAddChild: mockAdd,
+            handleSelect: mockSelect,
+            handleExpandClick: mockExpand,
+            nodeHighlight: 'black',
+            textHighlight: 'lightgrey',
+            showCheckBox: true,
+          }}
+        >
+          <div data-testid='container'>
+            <TreeNode
+              id={1}
+              canAddChildren={true}
+            />
+          </div>
+        </TreeOfNodesContext.Provider>,
+      );
+    });
+    // Click on checkbox
+    const check = screen.queryAllByRole('checkbox') as HTMLInputElement[];
+    expect(check[0]).toBeInTheDocument();
+    expect(check[0].checked).toEqual(false);
+    expect(check[0].indeterminate).toEqual(true);
+    await user.click(check[0]);
+    expect(mockSelect).toHaveBeenCalledWith([1, 2, 3, 4]);
+    // Click on expander
+    const exp = screen.queryByLabelText('Expander') as Element;
+    expect(exp).toBeInTheDocument();
+    await user.click(exp);
+    expect(mockExpand).toBeCalledWith(1);
   });
 });

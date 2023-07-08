@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useState } from 'react';
+import { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { checkExpandedNodes } from '../functions/checkExpandedNodes';
 import { iNodeUpdate, TreeNodeData } from './interface';
 import { TreeNode } from './TreeNode';
@@ -8,9 +8,9 @@ interface TreeOfNodesProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
-  multiSelect?: boolean;
-  selected?: Key[];
-  handleSelect?: (ret: Key) => void;
+  showCheckBox?: boolean;
+  selected?: Key | Key[];
+  handleSelect?: (ret: Key | Key[]) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (childId: Key) => Promise<iNodeUpdate>;
@@ -28,30 +28,35 @@ export const TreeOfNodes = <T extends unknown>({
   id,
   nodeList,
   roots,
-  canRemoveRoot = false,
-  canRenameRoot = false,
-  canAddChildren = false,
-  canRemoveChildren = false,
-  canRenameChildren = false,
   selected = [],
+  showCheckBox = false,
   handleSelect = () => {
     return;
   },
   onAdd,
   onRename,
   onRemove,
+  canRemoveRoot = false,
+  canRenameRoot = false,
+  canAddChildren = false,
+  canRemoveChildren = false,
+  canRenameChildren = false,
   nodeHighlight = 'red',
   textHighlight = 'rgba(255, 0, 0, 0.2)',
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
+  const selectedArray = useMemo(
+    () => (Array.isArray(selected) ? selected : [selected]),
+    [selected],
+  );
   useEffect(() => {
-    if (selected.length > 0) {
+    if (selectedArray.length > 0) {
       // Check all nodes are showing that should be
-      const shouldExpand = checkExpandedNodes(nodeList, selected, expandedNodes);
+      const shouldExpand = checkExpandedNodes(nodeList, selectedArray, expandedNodes);
       shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0 &&
         setExpandedNodes(shouldExpand);
     }
-  }, [expandedNodes, nodeList, selected]);
+  }, [expandedNodes, nodeList, selectedArray]);
 
   // Change expansion and update contexts
   const changeExpand = useCallback(
@@ -70,7 +75,8 @@ export const TreeOfNodes = <T extends unknown>({
       value={{
         id: id,
         nodeList,
-        selected,
+        selected: selectedArray,
+        showCheckBox,
         handleSelect,
         expandedNodes,
         handleExpandClick: (r, f) => changeExpand(r, f),

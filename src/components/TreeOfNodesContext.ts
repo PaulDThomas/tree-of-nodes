@@ -5,7 +5,8 @@ export interface TreeOfNodesContextProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   selected: Key[];
-  handleSelect: (ret: Key) => void;
+  showCheckBox: boolean;
+  handleSelect: (ret: Key | Key[]) => void;
   expandedNodes: Key[];
   handleExpandClick: (ret: Key, force?: boolean) => void;
   onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;

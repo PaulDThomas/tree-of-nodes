@@ -34,9 +34,20 @@ export const App = () => {
             canRemoveRoot
             nodeHighlight='blue'
             textHighlight='rgba(0,255,0,0.4)'
+            showCheckBox
             selected={selected}
             handleSelect={async (i) => {
-              setSelected([i]);
+              if (Array.isArray(i)) {
+                setSelected(
+                  selected.includes(i[0])
+                    ? selected.filter((s) => !i.includes(s))
+                    : [...selected, ...i.filter((n) => !selected.includes(n))],
+                );
+              } else {
+                setSelected(
+                  selected.includes(i) ? selected.filter((s) => s !== i) : [...selected, i],
+                );
+              }
             }}
             onAdd={async (p, n) => {
               const newId =
