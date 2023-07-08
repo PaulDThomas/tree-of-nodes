@@ -35,8 +35,8 @@ import '@asup/tree-of-nodes/dist/style.css';
   nodeList: TreeNodeData<T>[];
   roots: Key[];
   multiSelect?: boolean;
-  selectedIds?: Key[];
-  handleSelect?: (ret: Key) => void;
+  selectedIds?: Key | Key[];
+  handleSelect?: (ret: Key | Key []) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
   onRemove?: (childId: Key) => Promise<iNodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
@@ -50,7 +50,7 @@ import '@asup/tree-of-nodes/dist/style.css';
   />
 ```
 
-The component expects a list of nodes of type `TreeNodeData<T>` with unique `Key`s.
+The component expects a list of nodes of type `TreeNodeData<T>` with unique `React.Key`s.
 
 ## Properties
 
@@ -95,4 +95,57 @@ export interface iNodeUpdate {
   success: boolean;
   ErrorText?: string;
 }
+```
+
+# Handling clicks
+
+Context menu clicks on a node will result in a context menu being displayed with "Add", "Rename" and "Delete" options being displayed.
+
+Clicks on an expander will either expand or close the node's clidren
+
+Clicks on a name will select that item
+
+Clicks on a checkbox will select that item and all its descendents.
+
+## Single item selection
+
+To handle one (and only one) item being selected, it is suggested to use these base options
+
+```
+  <TreeOfNodes<T>
+    id={'...'}
+    nodeList={[...]}
+    roots={[...]}
+    selected={selected}
+    handleSelect={async (i) => {
+      setSelected([i]);
+    }}
+  />
+```
+
+## Multiple item selection
+
+To handle multiple selections, it is suggested to use these base options
+
+```
+  <TreeOfNodes<T>
+    id={'...'}
+    nodeList={[...]}
+    roots={[...]}
+    showCheckBox
+    selected={selected}
+    handleSelect={async (i) => {
+      if (Array.isArray(i)) {
+        setSelected(
+          selected.includes(i[0])
+            ? selected.filter((s) => !i.includes(s))
+            : [...selected, ...i.filter((n) => !selected.includes(n))],
+        );
+      } else {
+        setSelected(
+          selected.includes(i) ? selected.filter((s) => s !== i) : [...selected, i],
+        );
+      }
+    }}
+  />
 ```
