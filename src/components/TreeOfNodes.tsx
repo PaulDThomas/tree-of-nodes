@@ -21,6 +21,7 @@ interface TreeOfNodesProps<T> {
   canRenameChildren?: boolean;
   nodeHighlight?: string;
   textHighlight?: string;
+  spellCheck?: 'true' | 'false';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
@@ -43,6 +44,7 @@ export const TreeOfNodes = <T extends unknown>({
   canRenameChildren = false,
   nodeHighlight = 'red',
   textHighlight = 'rgba(255, 0, 0, 0.2)',
+  spellCheck = 'true',
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   const selectedArray = useMemo(
@@ -85,6 +87,7 @@ export const TreeOfNodes = <T extends unknown>({
         onRemove,
         nodeHighlight,
         textHighlight,
+        spellCheck,
       }}
     >
       {roots.map((r) => (
