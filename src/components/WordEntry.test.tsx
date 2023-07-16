@@ -15,40 +15,57 @@ describe('Word entry', () => {
     expect(we.nodeName).toEqual('SPAN');
   });
 
-  it('Editable render and blur', async () => {
+  test('Empty render', async () => {
+    render(
+      <div data-testid='container'>
+        <WordEntry
+          id='test-control'
+          value=''
+        />
+      </div>,
+    );
+    const container = screen.getByTestId('container') as HTMLDivElement;
+    const we = container.querySelector('#test-control') as HTMLElement;
+    expect(we).toBeInTheDocument();
+    expect(we.innerHTML).toEqual('&nbsp;');
+  });
+
+  test('Editable render and blur', async () => {
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    render(
-      <WordEntry
-        id='test-control'
-        value='Check'
-        editing={true}
-        setValue={mockSet}
-      />,
-    );
+    await act(async () => {
+      render(
+        <WordEntry
+          id='test-control'
+          value='Check'
+          editing={true}
+          setValue={mockSet}
+        />,
+      );
+    });
     const we = screen.getByDisplayValue('Check') as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual('INPUT');
-    await act(async () => {
-      await user.clear(we);
-      await user.type(we, 'One-Two');
-      fireEvent.blur(we);
-    });
+    await user.clear(we);
+    await user.type(we, 'One-Two');
+    fireEvent.blur(we);
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith('One-Two');
   });
 
-  it('Editable render and return', async () => {
+  test('Editable render and return', async () => {
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    render(
-      <WordEntry
-        id='test-control'
-        value='Check'
-        editing={true}
-        setValue={mockSet}
-      />,
-    );
+    await act(async () => {
+      render(
+        <WordEntry
+          id='test-control'
+          value='Check'
+          editing={true}
+          setValue={mockSet}
+        />,
+      );
+    });
     const we = screen.getByDisplayValue('Check') as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual('INPUT');
@@ -62,14 +79,19 @@ describe('Word entry', () => {
     const mockEscape = jest.fn();
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    const { container } = render(
-      <WordEntry
-        id='test-control'
-        editing={true}
-        setValue={mockSet}
-        sendEscape={mockEscape}
-      />,
-    );
+    await act(async () => {
+      render(
+        <div data-testid='container'>
+          <WordEntry
+            id='test-control'
+            editing={true}
+            setValue={mockSet}
+            sendEscape={mockEscape}
+          />
+        </div>,
+      );
+    });
+    const container = screen.queryByTestId('container') as HTMLDivElement;
     const we = container.querySelector('#test-control') as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual('INPUT');

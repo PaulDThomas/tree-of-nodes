@@ -9,10 +9,14 @@ interface WordEntryProps {
   setValue?: (ret: string) => void;
   sendEscape?: () => void;
   style?: React.CSSProperties;
+  spellCheck?: 'true' | 'false';
 }
 
 export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
-  ({ id, value, editing, saving, setValue, sendEscape, style }, ref): JSX.Element => {
+  (
+    { id, value, editing, saving, setValue, sendEscape, style, spellCheck = 'true' },
+    ref,
+  ): JSX.Element => {
     WordEntry.displayName = 'WordEntry';
     const currentStyle = useMemo<React.CSSProperties>(() => {
       return {
@@ -52,9 +56,9 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       return (
         <span
           style={currentStyle}
-          id={String(id)}
+          id={`${id}`}
         >
-          {value}
+          {value ? value : <>&nbsp;</>}
         </span>
       );
     }
@@ -73,6 +77,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
         )}
         <input
           autoFocus
+          spellCheck={spellCheck}
           id={String(id)}
           ref={ref}
           type='text'
@@ -92,5 +97,3 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     );
   },
 );
-
-WordEntry.displayName = 'WordEntry';

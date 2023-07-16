@@ -14,6 +14,7 @@ describe('Tree of node', () => {
             selected={['Z']}
             nodeList={mockNodes}
             roots={[0]}
+            spellCheck='false'
           />
         </div>,
       );

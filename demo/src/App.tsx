@@ -8,6 +8,9 @@ export const App = () => {
     useState<TreeNodeData<{ value: number } | number | undefined>[]>(mockNodes);
   const [selected, setSelected] = useState<Key[]>([2]);
 
+  const [usingCheckBoxes, setusingCheckBoxes] = useState<boolean>(true);
+  const [usingSpellCheck, setusingSpellCheck] = useState<boolean>(true);
+
   return (
     <Container>
       <Row
@@ -23,6 +26,28 @@ export const App = () => {
           style={{ height: '600px' }}
         >
           <h4>Tree of nodes</h4>
+          <div
+            style={{
+              border: '1px dashed black',
+              padding: '4px',
+              marginBottom: '8px',
+              borderRadius: '3px',
+            }}
+          >
+            <input
+              type='checkbox'
+              checked={usingCheckBoxes}
+              onChange={(e) => setusingCheckBoxes(e.currentTarget.checked)}
+            />{' '}
+            Use checkboxes?
+            <input
+              type='checkbox'
+              checked={usingSpellCheck}
+              onChange={(e) => setusingSpellCheck(e.currentTarget.checked)}
+              style={{ marginLeft: '12px' }}
+            />{' '}
+            Use spell check?
+          </div>
           <TreeOfNodes<{ value: number } | number | undefined>
             id={'node-tree'}
             nodeList={nodeList}
@@ -34,19 +59,24 @@ export const App = () => {
             canRemoveRoot
             nodeHighlight='blue'
             textHighlight='rgba(0,255,0,0.4)'
-            showCheckBox
+            showCheckBox={usingCheckBoxes}
             selected={selected}
+            spellCheck={usingSpellCheck ? 'true' : 'false'}
             handleSelect={async (i) => {
-              if (Array.isArray(i)) {
-                setSelected(
-                  selected.includes(i[0])
-                    ? selected.filter((s) => !i.includes(s))
-                    : [...selected, ...i.filter((n) => !selected.includes(n))],
-                );
+              if (usingCheckBoxes) {
+                if (Array.isArray(i)) {
+                  setSelected(
+                    selected.includes(i[0])
+                      ? selected.filter((s) => !i.includes(s))
+                      : [...selected, ...i.filter((n) => !selected.includes(n))],
+                  );
+                } else {
+                  setSelected(
+                    selected.includes(i) ? selected.filter((s) => s !== i) : [...selected, i],
+                  );
+                }
               } else {
-                setSelected(
-                  selected.includes(i) ? selected.filter((s) => s !== i) : [...selected, i],
-                );
+                setSelected([i as Key]);
               }
             }}
             onAdd={async (p, n) => {

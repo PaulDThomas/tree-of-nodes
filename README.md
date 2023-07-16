@@ -72,6 +72,7 @@ The component expects a list of nodes of type `TreeNodeData<T>` with unique `Rea
 | canRenameChildren | Allows renaming of non-root nodes in combination with specification of onRename function        |      `false`       |
 | nodeHighlight     | Selected node highlight colour                                                                  |       `red`        |
 | textHighlight     | Selected text highlight colour                                                                  | `rgba(255,0,0,0.2` |
+| spellCheck        | Use/disable browser spell check                                                                 |       'true'       |
 
 ### TreeNodeData
 

@@ -247,6 +247,7 @@ export const TreeNode = ({
                     margin: currentBorder === '' ? '1px' : '',
                     backgroundColor: currentBorder === '' ? '' : treeContext.textHighlight,
                   }}
+                  spellCheck={treeContext.spellCheck}
                 />
               </div>
             )}
@@ -288,6 +289,7 @@ export const TreeNode = ({
               sendEscape={() => {
                 setShowNewNode(false);
               }}
+              spellCheck={treeContext.spellCheck}
             />
           </div>
         )}
