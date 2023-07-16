@@ -16,7 +16,7 @@ describe('Tree node', () => {
       );
     });
     const container = screen.queryByTestId('container') as HTMLDivElement;
-    const tn = container.querySelector('#tree-of-nodes-treenode-test') as HTMLElement;
+    const tn = container.querySelector('#ton-treenode-test') as HTMLElement;
     expect(tn).not.toBeInTheDocument();
   });
 
@@ -311,46 +311,6 @@ describe('Tree node', () => {
     expect(newNode).not.toBeInTheDocument();
   });
 
-  //   test('Check with no children unselected', async () => {
-  //     const user = userEvent.setup();
-  //     const mockAdd = jest.fn(async () => {
-  //       return { success: true };
-  //     });
-  //     const mockSelect = jest.fn();
-  //     const mockExpand = jest.fn();
-  //     await act(async () => {
-  //       render(
-  //         <TreeOfNodesContext.Provider
-  //           value={{
-  //             id: 'test-tree',
-  //             nodeList: mockNodes,
-  //             selected: [],
-  //             expandedNodes: [],
-  //             onAddChild: mockAdd,
-  //             handleSelect: mockSelect,
-  //             handleExpandClick: mockExpand,
-  //             nodeHighlight: 'black',
-  //             textHighlight: 'lightgrey',
-  //             showCheckBox: true,
-  //           }}
-  //         >
-  //           <div data-testid='container'>
-  //             <TreeNode
-  //               id={4}
-  //               canAddChildren={true}
-  //             />
-  //           </div>
-  //         </TreeOfNodesContext.Provider>,
-  //       );
-  //     });
-  //     const check = screen.queryByRole('checkbox') as HTMLInputElement;
-  //     expect(check).toBeInTheDocument();
-  //     expect(check.checked).toEqual(false);
-  //     await user.click(check);
-  //     expect(mockSelect).toHaveBeenCalledWith([4]);
-  //   });
-  // });
-
   test('Check with children hidden, unselected', async () => {
     const user = userEvent.setup();
     const mockAdd = jest.fn(async () => {
@@ -384,7 +344,7 @@ describe('Tree node', () => {
       );
     });
     // Click on checkbox
-    const check = screen.queryByRole('checkbox') as HTMLInputElement;
+    const check = screen.queryAllByRole('checkbox')[0] as HTMLInputElement;
     expect(check).toBeInTheDocument();
     expect(check.checked).toEqual(false);
     await user.click(check);

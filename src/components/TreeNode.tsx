@@ -7,11 +7,11 @@ import {
   ExclamationCircleFill,
 } from 'react-bootstrap-icons';
 import { getAncestors } from '../functions/getAncestors';
-import { iNodeUpdate } from './interface';
+import { getDescendentIds } from '../functions/getDescendentIds';
+import './TreeNode.css';
 import { TreeOfNodesContext } from './TreeOfNodesContext';
 import { WordEntry } from './WordEntry';
-import './TreeNode.css';
-import { getDescendentIds } from '../functions/getDescendentIds';
+import { iNodeUpdate } from './interface';
 
 interface TreeNodeProps {
   id: Key;
@@ -179,14 +179,14 @@ export const TreeNode = ({
             <ExclamationCircleFill color='var(--bs-danger)' /> {errorText}
           </>
         ) : (
-          <div className='tree-of-nodes-node'>
+          <div className='ton-node'>
             {treeContext.showCheckBox && (
               <input
                 ref={checkRef}
                 type='checkbox'
                 role='checkbox'
-                className='tree-of-nodes-checkbox'
-                id={`${treeContext.id}-treenode-checkbox-${id}}`}
+                className='ton-checkbox'
+                id={`${treeContext.id}-treenode-checkbox-${id}`}
                 onClick={() => {
                   treeContext.handleSelect(descendents);
                 }}
@@ -196,7 +196,7 @@ export const TreeNode = ({
               !expanded ? (
                 <CaretRightFill
                   id={`${treeContext.id}-treenode-caret-${id}`}
-                  className='tree-of-nodes-expander'
+                  className='ton-expander'
                   role='button'
                   color={nodeColour}
                   aria-expanded={false}
@@ -206,7 +206,7 @@ export const TreeNode = ({
               ) : (
                 <CaretDownFill
                   id={`${treeContext.id}-treenode-caret-${id}`}
-                  className='tree-of-nodes-expander'
+                  className='ton-expander'
                   role='button'
                   aria-expanded={true}
                   aria-label='Expander'
@@ -219,7 +219,7 @@ export const TreeNode = ({
             ) : (
               <CaretRight
                 id={`${treeContext.id}-treenode-caret-${id}`}
-                className='tree-of-nodes-expander'
+                className='ton-expander'
                 role='button'
                 color={nodeColour}
                 aria-expanded={false}
@@ -252,32 +252,28 @@ export const TreeNode = ({
             )}
           </div>
         )}
-        {childNodes !== undefined &&
-          childNodes.map((h) => (
-            <span
-              key={h.id}
-              id={`${treeContext.id}-treenode-child-${h.id}`}
-              style={{
-                marginLeft: '16px',
-                display: 'block',
-                maxHeight: expanded ? '99999px' : '0px',
-                height: expanded ? 'auto' : '0px',
-                overflowY: 'hidden',
-                visibility: expanded ? 'inherit' : 'hidden',
-                opacity: expanded ? 1 : 0,
-                transition: 'visibility .3s, opacity .3s ease-in-out, max-height 0.3s ease-in-out',
-              }}
-            >
-              <TreeNode
-                id={h.id}
-                canRemove={canRemoveChildren}
-                canRename={canRenameChildren}
-                canAddChildren={canAddChildren}
-                canRemoveChildren={canRemoveChildren}
-                canRenameChildren={canRenameChildren}
-              />
-            </span>
-          ))}
+        {childNodes !== undefined && (
+          <div className={`ton-collapsible-wrapper ${expanded ? '' : 'collapsed'}`}>
+            <div className='ton-collapsible'>
+              {childNodes.map((h) => (
+                <span
+                  key={h.id}
+                  id={`${treeContext.id}-treenode-child-${h.id}`}
+                  className='ton-child'
+                >
+                  <TreeNode
+                    id={h.id}
+                    canRemove={canRemoveChildren}
+                    canRename={canRenameChildren}
+                    canAddChildren={canAddChildren}
+                    canRemoveChildren={canRemoveChildren}
+                    canRenameChildren={canRenameChildren}
+                  />
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
         {showNewNode && (
           <div>
             <WordEntry

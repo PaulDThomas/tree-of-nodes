@@ -24,7 +24,7 @@ export const App = () => {
         >
           <h4>Tree of nodes</h4>
           <TreeOfNodes<{ value: number } | number | undefined>
-            id={'nodetree'}
+            id={'node-tree'}
             nodeList={nodeList}
             roots={[0, 'X']}
             canAddChildren
