@@ -14,7 +14,6 @@ describe('Tree of node', () => {
             selected={['Z']}
             nodeList={mockNodes}
             roots={[0]}
-            spellCheck='false'
           />
         </div>,
       );
@@ -22,23 +21,25 @@ describe('Tree of node', () => {
     const container = screen.queryByTestId('container') as HTMLDivElement;
     const child = container.querySelector('#node-tree-treenode-child-A') as HTMLSpanElement;
     expect(child).toBeInTheDocument();
-    // expect(child).not.toBeVisible();
+    const wrapper = child.closest('.ton-collapsible-wrapper') as HTMLDivElement;
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper).toHaveClass('collapsed');
 
     const expander = container.querySelector('#node-tree-treenode-caret-0') as HTMLDivElement;
     expect(expander).toBeInTheDocument();
     await user.click(expander as HTMLElement);
-    // expect(child).toBeVisible();
+    expect(wrapper).not.toHaveClass('collapsed');
 
     const closer = container.querySelector('#node-tree-treenode-caret-0') as HTMLDivElement;
     await user.click(closer);
-    // expect(child).not.toBeVisible();
+    expect(wrapper).toHaveClass('collapsed');
 
     const item = container.querySelector('#node-tree-treenode-entry-0');
     expect(item).toBeInTheDocument();
     await user.click(item as HTMLElement);
   });
 
-  test('Render, show selected', async () => {
+  test('Empty render, click expand', async () => {
     await act(async () => {
       render(
         <div data-testid='container'>
@@ -54,6 +55,8 @@ describe('Tree of node', () => {
     const container = screen.queryByTestId('container') as HTMLDivElement;
     const child = container.querySelector('#node-tree-treenode-child-A') as HTMLSpanElement;
     expect(child).toBeInTheDocument();
-    expect(child).toBeVisible();
+    const wrapper = child.closest('.ton-collapsible-wrapper') as HTMLDivElement;
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper).not.toHaveClass('collapsed');
   });
 });

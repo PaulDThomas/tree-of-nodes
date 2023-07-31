@@ -148,7 +148,7 @@ export const TreeNode = ({
   }, [showNewNode]);
   const renameThis = useCallback(() => {
     setRenaming(true);
-    treeContext?.handleSelect(id);
+    treeContext && treeContext.handleSelect && treeContext.handleSelect(id);
   }, [id, treeContext]);
 
   // Context menu
@@ -188,7 +188,7 @@ export const TreeNode = ({
                 className='ton-checkbox'
                 id={`${treeContext.id}-treenode-checkbox-${id}`}
                 onClick={() => {
-                  treeContext.handleSelect(descendents);
+                  treeContext.handleSelect && treeContext.handleSelect(descendents);
                 }}
               />
             )}
@@ -230,9 +230,11 @@ export const TreeNode = ({
             {thisNode && (
               <div
                 style={{ display: 'inline-block' }}
-                onContextMenuCapture={() => treeContext.handleSelect(id)}
-                onClickCapture={() => treeContext.handleSelect(id)}
-                onFocusCapture={() => treeContext.handleSelect(id)}
+                onContextMenuCapture={() =>
+                  treeContext.handleSelect && treeContext.handleSelect(id)
+                }
+                onClickCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
+                onFocusCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
               >
                 <WordEntry
                   id={`${treeContext.id}-treenode-entry-${id}`}
