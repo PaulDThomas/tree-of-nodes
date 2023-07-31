@@ -31,9 +31,7 @@ export const TreeOfNodes = <T extends unknown>({
   roots,
   selected = [],
   showCheckBox = false,
-  handleSelect = () => {
-    return;
-  },
+  handleSelect,
   onAdd,
   onRename,
   onRemove,
