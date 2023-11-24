@@ -1,5 +1,5 @@
-import { Key } from 'react';
-import { TreeNodeBase } from '../components/interface';
+import { Key } from "react";
+import { TreeNodeBase } from "../components/interface";
 
 export const getDescendentIds = (id: Key | Key[], hierarchyNodes: TreeNodeBase[]): Key[] => {
   const processIds = Array.isArray(id) ? id : [id];

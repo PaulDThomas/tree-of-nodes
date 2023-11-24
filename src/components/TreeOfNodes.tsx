@@ -1,8 +1,8 @@
-import { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import { checkExpandedNodes } from '../functions/checkExpandedNodes';
-import { iNodeUpdate, TreeNodeData } from './interface';
-import { TreeNode } from './TreeNode';
-import { TreeOfNodesContext } from './TreeOfNodesContext';
+import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { checkExpandedNodes } from "../functions/checkExpandedNodes";
+import { iNodeUpdate, TreeNodeData } from "./interface";
+import { TreeNode } from "./TreeNode";
+import { TreeOfNodesContext } from "./TreeOfNodesContext";
 
 interface TreeOfNodesProps<T> {
   id: string;
@@ -21,7 +21,7 @@ interface TreeOfNodesProps<T> {
   canRenameChildren?: boolean;
   nodeHighlight?: string;
   textHighlight?: string;
-  spellCheck?: 'true' | 'false';
+  spellCheck?: "true" | "false";
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
@@ -40,9 +40,9 @@ export const TreeOfNodes = <T extends unknown>({
   canAddChildren = false,
   canRemoveChildren = false,
   canRenameChildren = false,
-  nodeHighlight = 'red',
-  textHighlight = 'rgba(255, 0, 0, 0.2)',
-  spellCheck = 'true',
+  nodeHighlight = "red",
+  textHighlight = "rgba(255, 0, 0, 0.2)",
+  spellCheck = "true",
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   const selectedArray = useMemo(
@@ -103,4 +103,4 @@ export const TreeOfNodes = <T extends unknown>({
   );
 };
 
-TreeOfNodes.displayName = 'TreeOfNodes';
+TreeOfNodes.displayName = "TreeOfNodes";

@@ -1,7 +1,7 @@
-import { Key, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { TreeNodeData, TreeOfNodes } from '../../src/main';
-import { mockNodes } from '../../src/__mocks__/mockNodes';
+import { Key, useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { TreeNodeData, TreeOfNodes } from "../../src/main";
+import { mockNodes } from "../../src/__mocks__/mockNodes";
 
 export const App = () => {
   const [nodeList, setNodeList] =
@@ -15,53 +15,53 @@ export const App = () => {
     <Container>
       <Row
         style={{
-          margin: '1rem',
-          border: '1px solid black',
-          borderRadius: '4px',
-          backgroundColor: 'white',
+          margin: "1rem",
+          border: "1px solid black",
+          borderRadius: "4px",
+          backgroundColor: "white",
         }}
       >
         <Col
           sm={12}
-          style={{ height: '600px' }}
+          style={{ height: "600px" }}
         >
           <h4>Tree of nodes</h4>
           <div
             style={{
-              border: '1px dashed black',
-              padding: '4px',
-              marginBottom: '8px',
-              borderRadius: '3px',
+              border: "1px dashed black",
+              padding: "4px",
+              marginBottom: "8px",
+              borderRadius: "3px",
             }}
           >
             <input
-              type='checkbox'
+              type="checkbox"
               checked={usingCheckBoxes}
               onChange={(e) => setusingCheckBoxes(e.currentTarget.checked)}
-            />{' '}
+            />{" "}
             Use checkboxes?
             <input
-              type='checkbox'
+              type="checkbox"
               checked={usingSpellCheck}
               onChange={(e) => setusingSpellCheck(e.currentTarget.checked)}
-              style={{ marginLeft: '12px' }}
-            />{' '}
+              style={{ marginLeft: "12px" }}
+            />{" "}
             Use spell check?
           </div>
           <TreeOfNodes<{ value: number } | number | undefined>
-            id={'node-tree'}
+            id={"node-tree"}
             nodeList={nodeList}
-            roots={[0, 'X']}
+            roots={[0, "X"]}
             canAddChildren
             canRemoveChildren
             canRenameChildren
             canRenameRoot
             canRemoveRoot
-            nodeHighlight='blue'
-            textHighlight='rgba(0,255,0,0.4)'
+            nodeHighlight="blue"
+            textHighlight="rgba(0,255,0,0.4)"
             showCheckBox={usingCheckBoxes}
             selected={selected}
-            spellCheck={usingSpellCheck ? 'true' : 'false'}
+            spellCheck={usingSpellCheck ? "true" : "false"}
             handleSelect={async (i) => {
               if (usingCheckBoxes) {
                 if (Array.isArray(i)) {
@@ -82,7 +82,7 @@ export const App = () => {
             onAdd={async (p, n) => {
               const newId =
                 (Math.max(
-                  ...nodeList.filter((n) => typeof n.id === 'number').map((n) => n.id as number),
+                  ...nodeList.filter((n) => typeof n.id === "number").map((n) => n.id as number),
                 ) ?? 0) + 1;
               setNodeList([...nodeList, { id: newId, parentId: p, label: n, data: newId }]);
               return { success: true };
