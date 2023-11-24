@@ -289,7 +289,10 @@ describe('Tree node', () => {
         { container },
       );
     });
-    expect(screen.queryByLabelText('Disabled expander')).toBeInTheDocument();
+    const dis = screen.queryByLabelText('Disabled expander') as Element;
+    expect(dis).toBeInTheDocument();
+    await user.click(dis);
+    expect(mockSelect).toHaveBeenCalledWith(4);
 
     const we = screen.getByText('One.Four');
     expect(we).toBeInTheDocument();

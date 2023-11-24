@@ -224,7 +224,7 @@ export const TreeNode = ({
                 color={nodeColour}
                 aria-expanded={false}
                 aria-label='Disabled expander'
-                aria-disabled={true}
+                onClick={() => treeContext.handleSelect && treeContext.handleSelect(id)}
               />
             )}
             {thisNode && (
