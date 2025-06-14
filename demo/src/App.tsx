@@ -8,8 +8,8 @@ export const App = () => {
     useState<TreeNodeData<{ value: number } | number | undefined>[]>(mockNodes);
   const [selected, setSelected] = useState<Key[]>([2]);
 
-  const [usingCheckBoxes, setusingCheckBoxes] = useState<boolean>(true);
-  const [usingSpellCheck, setusingSpellCheck] = useState<boolean>(true);
+  const [usingCheckBoxes, setUsingCheckBoxes] = useState<boolean>(true);
+  const [usingSpellCheck, setUsingSpellCheck] = useState<boolean>(true);
 
   return (
     <Container>
@@ -37,13 +37,13 @@ export const App = () => {
             <input
               type="checkbox"
               checked={usingCheckBoxes}
-              onChange={(e) => setusingCheckBoxes(e.currentTarget.checked)}
+              onChange={(e) => setUsingCheckBoxes(e.currentTarget.checked)}
             />{" "}
             Use checkboxes?
             <input
               type="checkbox"
               checked={usingSpellCheck}
-              onChange={(e) => setusingSpellCheck(e.currentTarget.checked)}
+              onChange={(e) => setUsingSpellCheck(e.currentTarget.checked)}
               style={{ marginLeft: "12px" }}
             />{" "}
             Use spell check?
