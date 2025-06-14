@@ -4,7 +4,39 @@
 }
 
 .ton-expander {
-  margin-bottom: 4px;
+  margin: 0;
+}
+
+.ton-node {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  height: 34px;
+}
+
+.ton-label {
+  height: 34px;
+}
+
+.ton-label-span {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ton-rename-holder {
+  width: 100%;
+}
+
+.ton-rename {
+  line-height: 0.75rem;
+  border: 1px dotted black;
+  width: 100%;
+  min-width: 0;
 }
 
 .ton-child {
@@ -17,6 +49,8 @@
 .ton-collapsible-wrapper {
   display: flex;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 .ton-collapsible-wrapper:after {
   content: "";
@@ -30,6 +64,7 @@
   transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
   margin-bottom: 0;
   max-height: 10000px;
+  width: 100%;
 }
 .ton-collapsible-wrapper.collapsed > .ton-collapsible {
   margin-bottom: -2000px;

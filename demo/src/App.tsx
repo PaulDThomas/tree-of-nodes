@@ -35,12 +35,14 @@ export const App = () => {
             }}
           >
             <input
+              id="use-checkboxes"
               type="checkbox"
               checked={usingCheckBoxes}
               onChange={(e) => setUsingCheckBoxes(e.currentTarget.checked)}
             />{" "}
             Use checkboxes?
             <input
+              id="use-spellcheck"
               type="checkbox"
               checked={usingSpellCheck}
               onChange={(e) => setUsingSpellCheck(e.currentTarget.checked)}

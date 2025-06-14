@@ -6,7 +6,7 @@ import { mockNodes } from "../__mocks__/mockNodes";
 
 const getById = queryByAttribute.bind(null, "id");
 
-describe("Tree node", () => {
+describe("TreeNode", () => {
   test("Empty render", async () => {
     await act(async () => {
       render(
@@ -87,7 +87,7 @@ describe("Tree node", () => {
   });
 
   test("Context menu actions, rename + escape", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockRename = jest.fn(async () => {
       return { success: true };
     });
@@ -122,6 +122,7 @@ describe("Tree node", () => {
     const ren = screen.getByText("Rename");
     expect(ren).toBeInTheDocument();
     await user.click(ren);
+
     const rootInput = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput).toBeInTheDocument();
     expect(rootInput?.tagName).toEqual("INPUT");
@@ -136,9 +137,9 @@ describe("Tree node", () => {
     await act(async () => {
       fireEvent.contextMenu(we2);
     });
-    const ren2 = screen.getByText("Rename");
+    const ren2 = screen.queryByText("Rename");
     expect(ren2).toBeInTheDocument();
-    await user.click(ren2);
+    await user.click(ren2!);
     const rootInput2 = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput2).toBeInTheDocument();
     expect(rootInput2?.tagName).toEqual("INPUT");
@@ -287,9 +288,7 @@ describe("Tree node", () => {
     expect(newNode?.tagName).toEqual("INPUT");
     await user.clear(newNode as HTMLInputElement);
     await user.type(newNode as HTMLInputElement, "new name");
-    await act(async () => {
-      await user.keyboard("{Escape}");
-    });
+    await user.keyboard("{Escape}");
     expect(mockAdd).not.toHaveBeenCalledWith(4, "new name");
     expect(newNode).not.toBeInTheDocument();
   });

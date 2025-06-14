@@ -72,35 +72,40 @@ export const TreeOfNodes = <T extends unknown>({
   );
 
   return (
-    <TreeOfNodesContext.Provider
-      value={{
-        id: id,
-        nodeList,
-        selected: selectedArray,
-        showCheckBox,
-        handleSelect,
-        expandedNodes,
-        handleExpandClick: (r, f) => changeExpand(r, f),
-        onAddChild: onAdd,
-        onRename,
-        onRemove,
-        nodeHighlight,
-        textHighlight,
-        spellCheck,
-      }}
+    <div
+      id={id}
+      className="tree-of-nodes"
     >
-      {roots.map((r) => (
-        <TreeNode
-          key={r}
-          id={r}
-          canRemove={canRemoveRoot}
-          canAddChildren={canAddChildren}
-          canRename={canRenameRoot}
-          canRemoveChildren={canRemoveChildren}
-          canRenameChildren={canRenameChildren}
-        />
-      ))}
-    </TreeOfNodesContext.Provider>
+      <TreeOfNodesContext.Provider
+        value={{
+          id: id,
+          nodeList,
+          selected: selectedArray,
+          showCheckBox,
+          handleSelect,
+          expandedNodes,
+          handleExpandClick: (r, f) => changeExpand(r, f),
+          onAddChild: onAdd,
+          onRename,
+          onRemove,
+          nodeHighlight,
+          textHighlight,
+          spellCheck,
+        }}
+      >
+        {roots.map((r) => (
+          <TreeNode
+            key={r}
+            id={r}
+            canRemove={canRemoveRoot}
+            canAddChildren={canAddChildren}
+            canRename={canRenameRoot}
+            canRemoveChildren={canRemoveChildren}
+            canRenameChildren={canRenameChildren}
+          />
+        ))}
+      </TreeOfNodesContext.Provider>
+    </div>
   );
 };
 

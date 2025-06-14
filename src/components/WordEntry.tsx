@@ -55,6 +55,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     if (!editing) {
       return (
         <span
+          className="ton-label-span"
           style={currentStyle}
           id={`${id}`}
         >
@@ -67,6 +68,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       <div
         style={currentStyle}
         id={`${id}-holder`}
+        className="ton-rename-holder"
       >
         {saving && (
           <Spinner
@@ -81,12 +83,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           id={String(id)}
           ref={ref}
           type="text"
-          style={{
-            lineHeight: "0.75rem",
-            border: "1px dotted black",
-            width: "auto",
-            minWidth: "0",
-          }}
+          className="ton-rename"
           value={currentValue}
           disabled={saving}
           onChange={(e) => setCurrentValue(e.currentTarget.value)}
