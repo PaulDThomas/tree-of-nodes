@@ -1,5 +1,5 @@
-import React, { Key, useCallback, useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import React, { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { Spinner } from "react-bootstrap";
 
 interface WordEntryProps {
   id: Key;
@@ -9,42 +9,42 @@ interface WordEntryProps {
   setValue?: (ret: string) => void;
   sendEscape?: () => void;
   style?: React.CSSProperties;
-  spellCheck?: 'true' | 'false';
+  spellCheck?: "true" | "false";
 }
 
 export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
   (
-    { id, value, editing, saving, setValue, sendEscape, style, spellCheck = 'true' },
+    { id, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
     ref,
   ): JSX.Element => {
-    WordEntry.displayName = 'WordEntry';
+    WordEntry.displayName = "WordEntry";
     const currentStyle = useMemo<React.CSSProperties>(() => {
       return {
-        display: 'inline-block',
-        padding: '1px',
-        paddingLeft: '3px',
-        paddingRight: '3px',
-        border: '1px',
-        borderRadius: '3px',
+        display: "inline-block",
+        padding: "1px",
+        paddingLeft: "3px",
+        paddingRight: "3px",
+        border: "1px",
+        borderRadius: "3px",
         ...style,
       };
     }, [style]);
 
-    const [currentValue, setCurrentValue] = useState<string>(value ?? '');
+    const [currentValue, setCurrentValue] = useState<string>(value ?? "");
     useEffect(() => {
-      setCurrentValue(value ?? '');
+      setCurrentValue(value ?? "");
     }, [value]);
 
     const returnData = useCallback(() => {
-      setValue && setValue(currentValue);
+      setValue?.(currentValue);
     }, [currentValue, setValue]);
 
     const keyPress = useCallback(
       (e: React.KeyboardEvent) => {
-        if (e.code === 'Escape') {
-          setCurrentValue(value ?? '');
-          sendEscape && sendEscape();
-        } else if (e.code === 'Enter') {
+        if (e.code === "Escape") {
+          setCurrentValue(value ?? "");
+          sendEscape?.();
+        } else if (e.code === "Enter") {
           returnData();
         }
       },
@@ -71,8 +71,8 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
         {saving && (
           <Spinner
             id={`${id}-spinner`}
-            size='sm'
-            animation='border'
+            size="sm"
+            animation="border"
           />
         )}
         <input
@@ -80,12 +80,12 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           spellCheck={spellCheck}
           id={String(id)}
           ref={ref}
-          type='text'
+          type="text"
           style={{
-            lineHeight: '0.75rem',
-            border: '1px dotted black',
-            width: 'auto',
-            minWidth: '0',
+            lineHeight: "0.75rem",
+            border: "1px dotted black",
+            width: "auto",
+            minWidth: "0",
           }}
           value={currentValue}
           disabled={saving}

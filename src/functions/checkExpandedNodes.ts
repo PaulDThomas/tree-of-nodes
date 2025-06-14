@@ -1,6 +1,6 @@
-import { TreeNodeBase } from 'components';
-import { Key } from 'react';
-import { getAncestors } from './getAncestors';
+import { TreeNodeBase } from "components";
+import { Key } from "react";
+import { getAncestors } from "./getAncestors";
 
 export const checkExpandedNodes = (
   nodeList: TreeNodeBase[],

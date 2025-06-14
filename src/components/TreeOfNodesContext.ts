@@ -1,5 +1,5 @@
-import { createContext, Key } from 'react';
-import { iNodeUpdate, TreeNodeData } from './interface';
+import { createContext, Key } from "react";
+import { iNodeUpdate, TreeNodeData } from "./interface";
 
 export interface TreeOfNodesContextProps<T> {
   id: string;
@@ -14,7 +14,7 @@ export interface TreeOfNodesContextProps<T> {
   onRemove?: (id: Key) => Promise<iNodeUpdate>;
   nodeHighlight: string;
   textHighlight: string;
-  spellCheck?: 'true' | 'false';
+  spellCheck?: "true" | "false";
 }
 
 export const TreeOfNodesContext = createContext<TreeOfNodesContextProps<unknown> | undefined>(
