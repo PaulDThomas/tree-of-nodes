@@ -21,9 +21,7 @@ describe("Tree node", () => {
   });
 
   test("Render with context", async () => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    const { container } = await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -40,9 +38,8 @@ describe("Tree node", () => {
         >
           <TreeNode id={0} />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const tn = container.querySelector("#test-tree-treenode-0") as HTMLElement;
     expect(tn).toBeInTheDocument();
     const check = screen.queryByRole("checkbox");
@@ -54,9 +51,7 @@ describe("Tree node", () => {
     const mockRename = jest.fn(async () => {
       return { success: true };
     });
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -77,9 +72,8 @@ describe("Tree node", () => {
             canRename={true}
           />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const we = screen.getByText("Root");
     expect(we).toBeInTheDocument();
     await act(async () => {
@@ -97,9 +91,7 @@ describe("Tree node", () => {
     const mockRename = jest.fn(async () => {
       return { success: true };
     });
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    const { container } = await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -120,9 +112,8 @@ describe("Tree node", () => {
             canRename={true}
           />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const we = screen.queryByText("Root") as HTMLElement;
     expect(we).toBeInTheDocument();
     await act(async () => {
@@ -134,13 +125,11 @@ describe("Tree node", () => {
     const rootInput = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput).toBeInTheDocument();
     expect(rootInput?.tagName).toEqual("INPUT");
-    await act(async () => {
-      await user.clear(rootInput as HTMLInputElement);
-      await user.type(rootInput as HTMLInputElement, "new name");
-      await user.keyboard("{Escape}");
-    });
+    await user.clear(rootInput as HTMLInputElement);
+    await user.type(rootInput as HTMLInputElement, "new name");
+    await user.keyboard("{Escape}");
     expect(screen.queryByText("new name")).not.toBeInTheDocument();
-    expect(mockRename).not.toBeCalled();
+    expect(mockRename).not.toHaveBeenCalled();
 
     const we2 = screen.getByText("Root");
     expect(we2).toBeInTheDocument();
@@ -153,9 +142,9 @@ describe("Tree node", () => {
     const rootInput2 = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput2).toBeInTheDocument();
     expect(rootInput2?.tagName).toEqual("INPUT");
+    await user.clear(rootInput2 as HTMLInputElement);
+    await user.type(rootInput2 as HTMLInputElement, "new name");
     await act(async () => {
-      await user.clear(rootInput2 as HTMLInputElement);
-      await user.type(rootInput2 as HTMLInputElement, "new name");
       fireEvent.blur(rootInput2 as HTMLInputElement);
     });
     expect(mockRename).toHaveBeenCalledWith(0, "new name");
@@ -166,9 +155,7 @@ describe("Tree node", () => {
     const mockRemove = jest.fn(async () => {
       return { success: false };
     });
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -189,9 +176,8 @@ describe("Tree node", () => {
             canRemove={true}
           />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const we = screen.getByText("One.Four");
     expect(we).toBeInTheDocument();
     await act(async () => {
@@ -203,16 +189,14 @@ describe("Tree node", () => {
     expect(screen.getByText("An unknown error has occured")).toBeInTheDocument();
   });
 
-  test("Context menu actions, add", async () => {
+  test("Context menu actions, add, no escape", async () => {
     const user = userEvent.setup();
     const mockAdd = jest.fn(async () => {
       return { success: true };
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    const { container } = await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -233,9 +217,8 @@ describe("Tree node", () => {
             canAddChildren={true}
           />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const we = screen.getByText("One.Four");
     expect(we).toBeInTheDocument();
     await act(async () => {
@@ -247,9 +230,9 @@ describe("Tree node", () => {
     await user.click(add);
     const newNode = getById(container, "treenode-new-4");
     expect(newNode?.tagName).toEqual("INPUT");
+    await user.clear(newNode as HTMLInputElement);
+    await user.type(newNode as HTMLInputElement, "new name");
     await act(async () => {
-      await user.clear(newNode as HTMLInputElement);
-      await user.type(newNode as HTMLInputElement, "new name");
       fireEvent.blur(newNode as HTMLInputElement);
     });
     expect(mockAdd).toHaveBeenCalledWith(4, "new name");
@@ -263,9 +246,7 @@ describe("Tree node", () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-    await act(async () => {
+    const { container } = await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -286,9 +267,8 @@ describe("Tree node", () => {
             canAddChildren={true}
           />
         </TreeOfNodesContext.Provider>,
-        { container },
-      );
-    });
+      ),
+    );
     const dis = screen.queryByLabelText("Disabled expander") as Element;
     expect(dis).toBeInTheDocument();
     await user.click(dis);
@@ -305,9 +285,9 @@ describe("Tree node", () => {
     await user.click(add);
     const newNode = getById(container, "treenode-new-4");
     expect(newNode?.tagName).toEqual("INPUT");
+    await user.clear(newNode as HTMLInputElement);
+    await user.type(newNode as HTMLInputElement, "new name");
     await act(async () => {
-      await user.clear(newNode as HTMLInputElement);
-      await user.type(newNode as HTMLInputElement, "new name");
       await user.keyboard("{Escape}");
     });
     expect(mockAdd).not.toHaveBeenCalledWith(4, "new name");
@@ -356,7 +336,7 @@ describe("Tree node", () => {
     const exp = screen.queryByLabelText("Expander") as Element;
     expect(exp).toBeInTheDocument();
     await user.click(exp);
-    expect(mockExpand).toBeCalledWith(1);
+    expect(mockExpand).toHaveBeenCalledWith(1);
   });
 
   test("Check with children shown, selected", async () => {
@@ -402,6 +382,6 @@ describe("Tree node", () => {
     const exp = screen.queryByLabelText("Expander") as Element;
     expect(exp).toBeInTheDocument();
     await user.click(exp);
-    expect(mockExpand).toBeCalledWith(1);
+    expect(mockExpand).toHaveBeenCalledWith(1);
   });
 });

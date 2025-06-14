@@ -19,6 +19,14 @@
     "url": "https://github.com/PaulDThomas/tree-of-nodes/issues"
   },
   "homepage": "https://github.com/PaulDThomas/tree-of-nodes#readme",
+  "scripts": {
+    "prepare": "husky",
+    "start": "rmdir /q/s .\\.parcel-cache && parcel demo/index.html --dist-dir demo/dist",
+    "test": "jest --collectCoverage=true",
+    "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
+    "eslint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" \"demo/**/*.{js,jsx,ts,tsx}\"",
+    "build": "rmdir /q/s .\\.parcel-cache && parcel build src/main.ts"
+  },
   "dependencies": {
     "@asup/context-menu": "^1.0.0",
     "@swc/helpers": "^0.5.1",
@@ -92,11 +100,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "scripts": {
-    "build": "parcel build src/main.ts",
-    "start": "parcel demo/index.html --dist-dir demo/dist",
-    "test": "jest --watch",
-    "test:coverage-report": "npm test -- --coverage --watchAll=false"
   }
 }

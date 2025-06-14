@@ -1,5 +1,14 @@
-import { ContextMenuHandler, iMenuItem } from "@asup/context-menu";
-import { Key, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { ContextMenuHandler, MenuItem } from "@asup/context-menu";
+import {
+  Key,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   CaretDownFill,
   CaretRight,
@@ -31,7 +40,7 @@ export const TreeNode = ({
   canAddChildren,
   canRemoveChildren,
   canRenameChildren,
-}: TreeNodeProps): JSX.Element => {
+}: TreeNodeProps): ReactNode => {
   // Contexts
   const treeContext = useContext(TreeOfNodesContext);
 
@@ -141,19 +150,19 @@ export const TreeNode = ({
   // Context actions
   const addChild = useCallback(() => {
     setShowNewNode(true);
-    treeContext && treeContext.handleExpandClick(id, true);
+    treeContext?.handleExpandClick?.(id, true);
   }, [id, treeContext]);
   useEffect(() => {
     if (showNewNode === true && newNameRef.current) newNameRef.current.focus();
   }, [showNewNode]);
   const renameThis = useCallback(() => {
     setRenaming(true);
-    treeContext && treeContext.handleSelect && treeContext.handleSelect(id);
+    treeContext?.handleSelect?.(id);
   }, [id, treeContext]);
 
   // Context menu
   const menuItems = useMemo(() => {
-    const menuItems: iMenuItem[] = [];
+    const menuItems: MenuItem[] = [];
     if (canAddChildren) {
       menuItems.push({ label: "Add", action: addChild });
     }
@@ -167,8 +176,7 @@ export const TreeNode = ({
   }, [addChild, canAddChildren, canRemove, canRename, childNodes, deleteThis, renameThis]);
 
   // Return node
-  if (!treeContext) return <></>;
-  return (
+  return !treeContext ? null : (
     <ContextMenuHandler menuItems={menuItems}>
       <div
         id={`${treeContext.id}-treenode-${id}`}
@@ -188,7 +196,7 @@ export const TreeNode = ({
                 className="ton-checkbox"
                 id={`${treeContext.id}-treenode-checkbox-${id}`}
                 onClick={() => {
-                  treeContext.handleSelect && treeContext.handleSelect(descendents);
+                  treeContext?.handleSelect?.(descendents);
                 }}
               />
             )}

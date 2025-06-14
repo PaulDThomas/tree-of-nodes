@@ -14,15 +14,15 @@ describe("Test getAncestors", () => {
     expect(getAncestors("B", [], mockNodes)).toEqual([mockNodes[1], mockNodes[0]]);
     // Current expanded
     expect(getAncestors("A", [mockNodes[2]], mockNodes)).toEqual([mockNodes[2], mockNodes[0]]);
+    // Expected expanded
+    expect(getAncestors("B", [mockNodes[2], mockNodes[1], mockNodes[0]], mockNodes)).toEqual([
+      mockNodes[2],
+      mockNodes[1],
+      mockNodes[0],
+    ]);
+    // Middle expanded
+    expect(getAncestors("B", [mockNodes[1]], mockNodes)).toEqual([mockNodes[1], mockNodes[0]]);
   });
-  // Expected expanded
-  expect(getAncestors("B", [mockNodes[2], mockNodes[1], mockNodes[0]], mockNodes)).toEqual([
-    mockNodes[2],
-    mockNodes[1],
-    mockNodes[0],
-  ]);
-  // Middle expanded
-  expect(getAncestors("B", [mockNodes[1]], mockNodes)).toEqual([mockNodes[1], mockNodes[0]]);
 });
 
 describe("Test getAncestors parents badly", () => {

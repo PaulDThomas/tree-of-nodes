@@ -53,8 +53,9 @@ export const TreeOfNodes = <T extends unknown>({
     if (selectedArray.length > 0) {
       // Check all nodes are showing that should be
       const shouldExpand = checkExpandedNodes(nodeList, selectedArray, expandedNodes);
-      shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0 &&
+      if (shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0) {
         setExpandedNodes(shouldExpand);
+      }
     }
   }, [expandedNodes, nodeList, selectedArray]);
 

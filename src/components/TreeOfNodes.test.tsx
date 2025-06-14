@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { mockNodes } from "../__mocks__/mockNodes";
 import { TreeOfNodes } from "./TreeOfNodes";
@@ -6,7 +6,7 @@ import { TreeOfNodes } from "./TreeOfNodes";
 describe("Tree of node", () => {
   test("Empty render, click expand", async () => {
     const user = userEvent.setup();
-    await act(async () => {
+    const { container } = await act(async () =>
       render(
         <div data-testid="container">
           <TreeOfNodes
@@ -16,9 +16,8 @@ describe("Tree of node", () => {
             roots={[0]}
           />
         </div>,
-      );
-    });
-    const container = screen.queryByTestId("container") as HTMLDivElement;
+      ),
+    );
     const child = container.querySelector("#node-tree-treenode-child-A") as HTMLSpanElement;
     expect(child).toBeInTheDocument();
     const wrapper = child.closest(".ton-collapsible-wrapper") as HTMLDivElement;
@@ -39,20 +38,17 @@ describe("Tree of node", () => {
     await user.click(item as HTMLElement);
   });
 
-  test("Empty render, click expand", async () => {
-    await act(async () => {
+  test("Click expand", async () => {
+    const { container } = await act(async () =>
       render(
-        <div data-testid="container">
-          <TreeOfNodes
-            id={"node-tree"}
-            selected={4}
-            nodeList={mockNodes}
-            roots={[0]}
-          />
-        </div>,
-      );
-    });
-    const container = screen.queryByTestId("container") as HTMLDivElement;
+        <TreeOfNodes
+          id={"node-tree"}
+          selected={4}
+          nodeList={mockNodes}
+          roots={[0]}
+        />,
+      ),
+    );
     const child = container.querySelector("#node-tree-treenode-child-A") as HTMLSpanElement;
     expect(child).toBeInTheDocument();
     const wrapper = child.closest(".ton-collapsible-wrapper") as HTMLDivElement;

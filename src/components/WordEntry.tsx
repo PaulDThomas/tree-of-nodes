@@ -36,14 +36,14 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     }, [value]);
 
     const returnData = useCallback(() => {
-      setValue && setValue(currentValue);
+      setValue?.(currentValue);
     }, [currentValue, setValue]);
 
     const keyPress = useCallback(
       (e: React.KeyboardEvent) => {
         if (e.code === "Escape") {
           setCurrentValue(value ?? "");
-          sendEscape && sendEscape();
+          sendEscape?.();
         } else if (e.code === "Enter") {
           returnData();
         }
