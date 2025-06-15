@@ -1,15 +1,28 @@
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { TreeNodeData, TreeOfNodes } from "../../src/main";
 import { mockNodes } from "../../src/__mocks__/mockNodes";
+import { TreeNodeData, TreeOfNodes } from "../../src/main";
 
 export const App = () => {
   const [nodeList, setNodeList] =
-    useState<TreeNodeData<{ value: number } | number | undefined>[]>(mockNodes);
+    useState<TreeNodeData<{ value: number } | string | number | undefined>[]>(mockNodes);
   const [selected, setSelected] = useState<Key[]>([2]);
 
   const [usingCheckBoxes, setUsingCheckBoxes] = useState<boolean>(true);
   const [usingSpellCheck, setUsingSpellCheck] = useState<boolean>(true);
+
+  const [addSlow, setAddSlow] = useState<boolean>(false);
+  useEffect(() => {
+    if (!addSlow && selected.includes("Z")) {
+      const newNodes: TreeNodeData<string>[] = [
+        { id: "ZA", parentId: "Z", label: "Hear no evil", data: "ears" },
+        { id: "ZB", parentId: "Z", label: "See no evil", data: "eyes" },
+        { id: "ZC", parentId: "Z", label: "Speak no evil", data: "mouth" },
+      ];
+      setNodeList((prev) => [...prev, ...newNodes]);
+      setAddSlow(true);
+    }
+  }, [addSlow, selected]);
 
   return (
     <Container>
@@ -50,7 +63,7 @@ export const App = () => {
             />{" "}
             Use spell check?
           </div>
-          <TreeOfNodes<{ value: number } | number | undefined>
+          <TreeOfNodes<{ value: number } | string | number | undefined>
             id={"node-tree"}
             nodeList={nodeList}
             roots={[0, "X"]}

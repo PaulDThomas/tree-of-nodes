@@ -1,20 +1,21 @@
 import { act, fireEvent, queryByAttribute, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { mockNodes } from "../__mocks__/mockNodes";
 import { TreeNode } from "./TreeNode";
 import { TreeOfNodesContext } from "./TreeOfNodesContext";
-import { mockNodes } from "../__mocks__/mockNodes";
+import { TreeNodeData } from "./interface";
 
 const getById = queryByAttribute.bind(null, "id");
 
 describe("TreeNode", () => {
   test("Empty render", async () => {
-    await act(async () => {
+    await act(async () =>
       render(
         <div data-testid="container">
           <TreeNode id={"test"} />
         </div>,
-      );
-    });
+      ),
+    );
     const container = screen.queryByTestId("container") as HTMLDivElement;
     const tn = container.querySelector("#ton-treenode-test") as HTMLElement;
     expect(tn).not.toBeInTheDocument();
@@ -300,7 +301,7 @@ describe("TreeNode", () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -323,8 +324,8 @@ describe("TreeNode", () => {
             />
           </div>
         </TreeOfNodesContext.Provider>,
-      );
-    });
+      ),
+    );
     // Click on checkbox
     const check = screen.queryAllByRole("checkbox")[0] as HTMLInputElement;
     expect(check).toBeInTheDocument();
@@ -345,7 +346,7 @@ describe("TreeNode", () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -368,8 +369,8 @@ describe("TreeNode", () => {
             />
           </div>
         </TreeOfNodesContext.Provider>,
-      );
-    });
+      ),
+    );
     // Click on checkbox
     const check = screen.queryAllByRole("checkbox") as HTMLInputElement[];
     expect(check[0]).toBeInTheDocument();
@@ -382,5 +383,51 @@ describe("TreeNode", () => {
     expect(exp).toBeInTheDocument();
     await user.click(exp);
     expect(mockExpand).toHaveBeenCalledWith(1);
+  });
+
+  test("Add children after initial render", async () => {
+    const mockSelect = jest.fn();
+    const mockExpand = jest.fn();
+    const MockComponent = ({
+      nodeList,
+    }: {
+      nodeList: TreeNodeData<number | { value: number } | undefined>[];
+    }) => (
+      <TreeOfNodesContext.Provider
+        value={{
+          id: "test-tree",
+          nodeList,
+          selected: ["Z"],
+          expandedNodes: ["Z"],
+          handleSelect: mockSelect,
+          handleExpandClick: mockExpand,
+          nodeHighlight: "black",
+          textHighlight: "lightgrey",
+          showCheckBox: false,
+        }}
+      >
+        <TreeNode id={"Z"} />
+      </TreeOfNodesContext.Provider>
+    );
+
+    const { container, rerender } = await act(async () =>
+      render(<MockComponent nodeList={mockNodes} />),
+    );
+
+    const wrapper = container.querySelector(".ton-collapsible-wrapper") as HTMLDivElement;
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper).toHaveClass("collapsed");
+    expect(wrapper).toBeEmptyDOMElement();
+
+    // Rerender with additional node, no longer collapsed
+    await act(async () =>
+      rerender(
+        <MockComponent
+          nodeList={[...mockNodes, { id: "ZA", label: "ZA", parentId: "Z", data: undefined }]}
+        />,
+      ),
+    );
+    expect(wrapper).not.toHaveClass("collapsed");
+    expect(wrapper).not.toBeEmptyDOMElement();
   });
 });
