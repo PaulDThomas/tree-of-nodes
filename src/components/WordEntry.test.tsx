@@ -33,7 +33,7 @@ describe("Word entry", () => {
   test("Editable render and blur", async () => {
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    await act(async () => {
+    await act(async () =>
       render(
         <WordEntry
           id="test-control"
@@ -41,8 +41,8 @@ describe("Word entry", () => {
           editing={true}
           setValue={mockSet}
         />,
-      );
-    });
+      ),
+    );
     const we = screen.getByDisplayValue("Check") as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual("INPUT");
@@ -56,7 +56,7 @@ describe("Word entry", () => {
   test("Editable render and return", async () => {
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    await act(async () => {
+    await act(async () =>
       render(
         <WordEntry
           id="test-control"
@@ -64,8 +64,8 @@ describe("Word entry", () => {
           editing={true}
           setValue={mockSet}
         />,
-      );
-    });
+      ),
+    );
     const we = screen.getByDisplayValue("Check") as HTMLElement;
     expect(we).toBeInTheDocument();
     expect(we.nodeName).toEqual("INPUT");
@@ -79,7 +79,7 @@ describe("Word entry", () => {
     const mockEscape = jest.fn();
     const mockSet = jest.fn();
     const user = userEvent.setup();
-    await act(async () => {
+    await act(async () =>
       render(
         <div data-testid="container">
           <WordEntry
@@ -89,8 +89,8 @@ describe("Word entry", () => {
             sendEscape={mockEscape}
           />
         </div>,
-      );
-    });
+      ),
+    );
     const container = screen.queryByTestId("container") as HTMLDivElement;
     const we = container.querySelector("#test-control") as HTMLElement;
     expect(we).toBeInTheDocument();
@@ -124,5 +124,28 @@ describe("Word entry", () => {
     expect(we.nodeName).toEqual("INPUT");
     expect(we).toHaveValue("Check");
     expect(we.disabled).toEqual(true);
+  });
+
+  test("Editable render and click outside", async () => {
+    const mockSet = jest.fn();
+    const user = userEvent.setup();
+    const { container } = await act(async () =>
+      render(
+        <WordEntry
+          id="test-control"
+          value="Check"
+          editing={true}
+          setValue={mockSet}
+        />,
+      ),
+    );
+    const we = container.querySelector("#test-control") as HTMLElement;
+    expect(we).toBeInTheDocument();
+    expect(we.nodeName).toEqual("INPUT");
+    await user.clear(we);
+    await user.type(we, "One-Two");
+    fireEvent.mouseDown(document.body);
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith("One-Two");
   });
 });

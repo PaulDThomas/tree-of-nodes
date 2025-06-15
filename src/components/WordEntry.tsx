@@ -1,4 +1,4 @@
-import React, { Key, useCallback, useEffect, useMemo, useState } from "react";
+import React, { Key, useCallback, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 
 interface WordEntryProps {
@@ -17,19 +17,6 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     { id, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
     ref,
   ): JSX.Element => {
-    WordEntry.displayName = "WordEntry";
-    const currentStyle = useMemo<React.CSSProperties>(() => {
-      return {
-        display: "inline-block",
-        padding: "1px",
-        paddingLeft: "3px",
-        paddingRight: "3px",
-        border: "1px",
-        borderRadius: "3px",
-        ...style,
-      };
-    }, [style]);
-
     const [currentValue, setCurrentValue] = useState<string>(value ?? "");
     useEffect(() => {
       setCurrentValue(value ?? "");
@@ -51,22 +38,39 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       [returnData, sendEscape, value],
     );
 
-    // Simple if not editing
-    if (!editing) {
-      return (
-        <span
-          className="ton-label-span"
-          style={currentStyle}
-          id={`${id}`}
-        >
-          {value ? value : <>&nbsp;</>}
-        </span>
-      );
-    }
+    // Add window onMouseDown event to stop events when editing
+    useEffect(() => {
+      const handleMouseDown = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (
+          editing &&
+          target.id !== `${id}` &&
+          target.id !== `${id}-holder` &&
+          target.id !== `${id}-spinner` &&
+          target.className !== "ton-rename"
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          returnData();
+        }
+      };
+      window.addEventListener("mousedown", handleMouseDown);
+      return () => {
+        window.removeEventListener("mousedown", handleMouseDown);
+      };
+    }, [editing, id, returnData]);
 
-    return (
+    return !editing ? (
+      <span
+        className="ton-label-span"
+        style={style}
+        id={`${id}`}
+      >
+        {value ? value : <>&nbsp;</>}
+      </span>
+    ) : (
       <div
-        style={currentStyle}
+        style={style}
         id={`${id}-holder`}
         className="ton-rename-holder"
       >
@@ -94,3 +98,5 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     );
   },
 );
+
+WordEntry.displayName = "WordEntry";
