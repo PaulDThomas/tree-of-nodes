@@ -6,7 +6,13 @@ export const mockNodes: TreeNodeData<{ value: number } | number | undefined>[] =
   { id: "B", parentId: "A", label: "Be", data: { value: 9 } },
   { id: "X", label: "Ex", data: 16 },
   { id: "Y", parentId: "X", label: "Why?", data: { value: 18 } },
-  { id: "Z", parentId: "X", label: "Zed", data: -23 },
+  {
+    id: "Z",
+    parentId: "X",
+    label:
+      "Zed - and this has a label that really is too long to be show, which is a shame when you think about it",
+    data: -23,
+  },
   { id: 1, parentId: 0, label: "One", data: undefined },
   { id: 2, parentId: 1, label: "One.Two", data: { value: 32 } },
   { id: 3, parentId: 1, label: "One.Three", data: { value: 12 } },

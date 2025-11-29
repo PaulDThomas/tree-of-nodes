@@ -1,48 +1,105 @@
+:root {
+  --ton-transition-time: 0.3s;
+  --ton-long-transition-time: 0.6s;
+}
+
+.tree-of-nodes {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  gap: 1px;
+}
+
 .ton-checkbox {
   margin-right: 3px;
   margin-top: 3px;
 }
 
 .ton-expander {
-  margin-bottom: 4px;
+  margin: 0;
+}
+
+.ton-node {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  height: 30px;
+}
+
+.ton-label {
+  height: 26px;
+}
+
+.ton-label-span {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 1px;
+  padding-left: 3px;
+  padding-right: 3px;
+  border: 1px;
+  border-radius: 3px;
+}
+
+.ton-rename-holder {
+  width: 100%;
+}
+
+.ton-rename {
+  line-height: 24px;
+  border: 1px dotted black;
+  width: 100%;
+  min-width: 0;
 }
 
 .ton-child {
   margin-left: 16px;
   display: block;
   opacity: 1;
-  transition: opacity 0.6s linear;
+  transition: opacity var(--ton-long-transition-time) linear;
 }
 
 .ton-collapsible-wrapper {
   display: flex;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 .ton-collapsible-wrapper:after {
   content: "";
-  height: 20px;
+  height: 1px;
   transition:
-    height 0.3s linear,
-    max-height 0s 0.3s linear;
+    height var(--ton-transition-time) linear,
+    max-height 0s var(--ton-transition-time) linear;
   max-height: 0px;
 }
 .ton-collapsible {
-  transition: margin-bottom 0.3s cubic-bezier(0, 0, 0, 1);
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  transition: margin-bottom var(--ton-transition-time) cubic-bezier(0, 0, 0, 1);
+  margin-top: 1px;
+  margin-bottom: 1px;
   max-height: 10000px;
+  width: 100%;
 }
 .ton-collapsible-wrapper.collapsed > .ton-collapsible {
   margin-bottom: -2000px;
   transition:
-    margin-bottom 0.3s cubic-bezier(1, 0, 1, 1),
-    visibility 0s 0.3s,
-    max-height 0s 0.3s;
+    margin-bottom var(--ton-transition-time) cubic-bezier(1, 0, 1, 1),
+    visibility 0s var(--ton-transition-time),
+    max-height 0s var(--ton-transition-time);
   visibility: hidden;
   max-height: 0;
 }
 .ton-collapsible-wrapper.collapsed:after {
   height: 0;
-  transition: height 0.3s linear;
+  transition: height var(--ton-transition-time) linear;
   max-height: 20px;
 }
 .ton-collapsible-wrapper.collapsed {
@@ -50,5 +107,5 @@
 }
 .ton-collapsible-wrapper.collapsed .ton-child {
   opacity: 0;
-  transition: opacity 0.6s linear;
+  transition: opacity var(--ton-long-transition-time) linear;
 }

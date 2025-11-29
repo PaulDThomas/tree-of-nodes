@@ -1,20 +1,21 @@
 import { act, fireEvent, queryByAttribute, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { mockNodes } from "../__mocks__/mockNodes";
 import { TreeNode } from "./TreeNode";
 import { TreeOfNodesContext } from "./TreeOfNodesContext";
-import { mockNodes } from "../__mocks__/mockNodes";
+import { TreeNodeData } from "./interface";
 
 const getById = queryByAttribute.bind(null, "id");
 
-describe("Tree node", () => {
+describe("TreeNode", () => {
   test("Empty render", async () => {
-    await act(async () => {
+    await act(async () =>
       render(
         <div data-testid="container">
           <TreeNode id={"test"} />
         </div>,
-      );
-    });
+      ),
+    );
     const container = screen.queryByTestId("container") as HTMLDivElement;
     const tn = container.querySelector("#ton-treenode-test") as HTMLElement;
     expect(tn).not.toBeInTheDocument();
@@ -87,7 +88,7 @@ describe("Tree node", () => {
   });
 
   test("Context menu actions, rename + escape", async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     const mockRename = jest.fn(async () => {
       return { success: true };
     });
@@ -122,6 +123,7 @@ describe("Tree node", () => {
     const ren = screen.getByText("Rename");
     expect(ren).toBeInTheDocument();
     await user.click(ren);
+
     const rootInput = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput).toBeInTheDocument();
     expect(rootInput?.tagName).toEqual("INPUT");
@@ -136,9 +138,9 @@ describe("Tree node", () => {
     await act(async () => {
       fireEvent.contextMenu(we2);
     });
-    const ren2 = screen.getByText("Rename");
+    const ren2 = screen.queryByText("Rename");
     expect(ren2).toBeInTheDocument();
-    await user.click(ren2);
+    await user.click(ren2!);
     const rootInput2 = getById(container, "test-tree-treenode-entry-0");
     expect(rootInput2).toBeInTheDocument();
     expect(rootInput2?.tagName).toEqual("INPUT");
@@ -287,9 +289,7 @@ describe("Tree node", () => {
     expect(newNode?.tagName).toEqual("INPUT");
     await user.clear(newNode as HTMLInputElement);
     await user.type(newNode as HTMLInputElement, "new name");
-    await act(async () => {
-      await user.keyboard("{Escape}");
-    });
+    await user.keyboard("{Escape}");
     expect(mockAdd).not.toHaveBeenCalledWith(4, "new name");
     expect(newNode).not.toBeInTheDocument();
   });
@@ -301,7 +301,7 @@ describe("Tree node", () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -324,8 +324,8 @@ describe("Tree node", () => {
             />
           </div>
         </TreeOfNodesContext.Provider>,
-      );
-    });
+      ),
+    );
     // Click on checkbox
     const check = screen.queryAllByRole("checkbox")[0] as HTMLInputElement;
     expect(check).toBeInTheDocument();
@@ -346,7 +346,7 @@ describe("Tree node", () => {
     });
     const mockSelect = jest.fn();
     const mockExpand = jest.fn();
-    await act(async () => {
+    await act(async () =>
       render(
         <TreeOfNodesContext.Provider
           value={{
@@ -369,8 +369,8 @@ describe("Tree node", () => {
             />
           </div>
         </TreeOfNodesContext.Provider>,
-      );
-    });
+      ),
+    );
     // Click on checkbox
     const check = screen.queryAllByRole("checkbox") as HTMLInputElement[];
     expect(check[0]).toBeInTheDocument();
@@ -383,5 +383,51 @@ describe("Tree node", () => {
     expect(exp).toBeInTheDocument();
     await user.click(exp);
     expect(mockExpand).toHaveBeenCalledWith(1);
+  });
+
+  test("Add children after initial render", async () => {
+    const mockSelect = jest.fn();
+    const mockExpand = jest.fn();
+    const MockComponent = ({
+      nodeList,
+    }: {
+      nodeList: TreeNodeData<number | { value: number } | undefined>[];
+    }) => (
+      <TreeOfNodesContext.Provider
+        value={{
+          id: "test-tree",
+          nodeList,
+          selected: ["Z"],
+          expandedNodes: ["Z"],
+          handleSelect: mockSelect,
+          handleExpandClick: mockExpand,
+          nodeHighlight: "black",
+          textHighlight: "lightgrey",
+          showCheckBox: false,
+        }}
+      >
+        <TreeNode id={"Z"} />
+      </TreeOfNodesContext.Provider>
+    );
+
+    const { container, rerender } = await act(async () =>
+      render(<MockComponent nodeList={mockNodes} />),
+    );
+
+    const wrapper = container.querySelector(".ton-collapsible-wrapper") as HTMLDivElement;
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper).toHaveClass("collapsed");
+    expect(wrapper).toBeEmptyDOMElement();
+
+    // Rerender with additional node, no longer collapsed
+    await act(async () =>
+      rerender(
+        <MockComponent
+          nodeList={[...mockNodes, { id: "ZA", label: "ZA", parentId: "Z", data: undefined }]}
+        />,
+      ),
+    );
+    expect(wrapper).not.toHaveClass("collapsed");
+    expect(wrapper).not.toBeEmptyDOMElement();
   });
 });

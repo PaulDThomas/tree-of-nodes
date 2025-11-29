@@ -60,10 +60,20 @@ export const TreeNode = ({
 
   // State
   const [error, setError] = useState<boolean>(false);
-  const [errorText, setErrotText] = useState<string>("");
+  const [errorText, setErrorText] = useState<string>("");
   const expanded = useMemo(() => {
     return (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
   }, [id, treeContext?.expandedNodes]);
+
+  // Ensures that child nodes are drawn before they are expanded
+  const [hasRenderedClosed, setHasRenderedClosed] = useState<boolean>(
+    childNodes !== undefined && childNodes.length > 0,
+  );
+  useEffect(() => {
+    if (childNodes && childNodes.length > 0 && !hasRenderedClosed) {
+      setHasRenderedClosed(true);
+    }
+  }, [childNodes, hasRenderedClosed]);
 
   // Checkbox
   const checkRef = useRef<HTMLInputElement | null>(null);
@@ -108,10 +118,10 @@ export const TreeNode = ({
   const handleReturn = useCallback((ret: iNodeUpdate) => {
     if (!ret.success) {
       setError(true);
-      setErrotText(ret.ErrorText ?? "An unknown error has occured");
+      setErrorText(ret.ErrorText ?? "An unknown error has occured");
     } else {
       setError(false);
-      setErrotText("");
+      setErrorText("");
     }
   }, []);
 
@@ -177,94 +187,103 @@ export const TreeNode = ({
 
   // Return node
   return !treeContext ? null : (
-    <ContextMenuHandler menuItems={menuItems}>
-      <div
-        id={`${treeContext.id}-treenode-${id}`}
-        className="treenode"
+    <>
+      <ContextMenuHandler
+        menuItems={menuItems}
+        style={{ display: "inline-block", width: "100%" }}
       >
-        {error ? (
-          <>
-            <ExclamationCircleFill color="var(--bs-danger)" /> {errorText}
-          </>
-        ) : (
-          <div className="ton-node">
-            {treeContext.showCheckBox && (
-              <input
-                ref={checkRef}
-                type="checkbox"
-                role="checkbox"
-                className="ton-checkbox"
-                id={`${treeContext.id}-treenode-checkbox-${id}`}
-                onClick={() => {
-                  treeContext?.handleSelect?.(descendents);
-                }}
-              />
-            )}
-            {childNodes !== undefined && childNodes.length > 0 ? (
-              !expanded ? (
-                <CaretRightFill
+        <div
+          id={`${treeContext.id}-treenode-${id}`}
+          className="treenode"
+        >
+          {error ? (
+            <>
+              <ExclamationCircleFill color="var(--bs-danger)" /> {errorText}
+            </>
+          ) : (
+            <div className="ton-node">
+              {treeContext.showCheckBox && (
+                <input
+                  ref={checkRef}
+                  type="checkbox"
+                  role="checkbox"
+                  className="ton-checkbox"
+                  id={`${treeContext.id}-treenode-checkbox-${id}`}
+                  onClick={() => treeContext.handleSelect?.(descendents)}
+                />
+              )}
+              {childNodes && childNodes.length > 0 ? (
+                !expanded ? (
+                  <CaretRightFill
+                    id={`${treeContext.id}-treenode-caret-${id}`}
+                    style={{ width: "16px", height: "16px" }}
+                    className="ton-expander"
+                    role="button"
+                    color={nodeColour}
+                    aria-expanded={false}
+                    aria-label="Expander"
+                    onClick={() => treeContext.handleExpandClick(id)}
+                  />
+                ) : (
+                  <CaretDownFill
+                    id={`${treeContext.id}-treenode-caret-${id}`}
+                    className="ton-expander"
+                    role="button"
+                    aria-expanded={true}
+                    aria-label="Expander"
+                    color={nodeColour}
+                    onClick={() => treeContext.handleExpandClick(id)}
+                  />
+                )
+              ) : (
+                <CaretRight
                   id={`${treeContext.id}-treenode-caret-${id}`}
                   className="ton-expander"
                   role="button"
                   color={nodeColour}
                   aria-expanded={false}
-                  aria-label="Expander"
-                  onClick={() => treeContext.handleExpandClick(id)}
+                  aria-label="Disabled expander"
+                  onClick={() => treeContext.handleSelect?.(id)}
                 />
-              ) : (
-                <CaretDownFill
-                  id={`${treeContext.id}-treenode-caret-${id}`}
-                  className="ton-expander"
-                  role="button"
-                  aria-expanded={true}
-                  aria-label="Expander"
-                  color={nodeColour}
-                  onClick={() => {
-                    treeContext.handleExpandClick(id);
+              )}
+              {thisNode && (
+                <div
+                  className="ton-label"
+                  style={{ width: `calc(100% - ${treeContext.showCheckBox ? "32px" : "16px"})` }}
+                  onContextMenuCapture={() => treeContext.handleSelect?.(id)}
+                  onClickCapture={() => {
+                    if (!treeContext.expandedNodes.includes(id)) treeContext.handleExpandClick(id);
+                    treeContext.handleSelect?.(id);
                   }}
-                />
-              )
-            ) : (
-              <CaretRight
-                id={`${treeContext.id}-treenode-caret-${id}`}
-                className="ton-expander"
-                role="button"
-                color={nodeColour}
-                aria-expanded={false}
-                aria-label="Disabled expander"
-                onClick={() => treeContext.handleSelect && treeContext.handleSelect(id)}
-              />
-            )}
-            {thisNode && (
-              <div
-                style={{ display: "inline-block" }}
-                onContextMenuCapture={() =>
-                  treeContext.handleSelect && treeContext.handleSelect(id)
-                }
-                onClickCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
-                onFocusCapture={() => treeContext.handleSelect && treeContext.handleSelect(id)}
-              >
-                <WordEntry
-                  id={`${treeContext.id}-treenode-entry-${id}`}
-                  ref={currentNameRef}
-                  value={thisNode.label}
-                  editing={renaming}
-                  saving={updatingNode}
-                  setValue={(ret) => renameNode(ret)}
-                  sendEscape={() => setRenaming(false)}
-                  style={{
-                    border: currentBorder,
-                    margin: currentBorder === "" ? "1px" : "",
-                    backgroundColor: currentBorder === "" ? "" : treeContext.textHighlight,
-                  }}
-                  spellCheck={treeContext.spellCheck}
-                />
-              </div>
-            )}
-          </div>
-        )}
-        {childNodes !== undefined && (
-          <div className={`ton-collapsible-wrapper ${expanded ? "" : "collapsed"}`}>
+                  onFocusCapture={() => treeContext.handleSelect?.(id)}
+                >
+                  <WordEntry
+                    id={`${treeContext.id}-treenode-entry-${id}`}
+                    className={currentBorder ? "selected" : ""}
+                    ref={currentNameRef}
+                    value={thisNode.label}
+                    editing={renaming}
+                    saving={updatingNode}
+                    setValue={(ret) => renameNode(ret)}
+                    sendEscape={() => setRenaming(false)}
+                    style={{
+                      border: currentBorder,
+                      margin: currentBorder === "" ? "1px" : "",
+                      backgroundColor: currentBorder === "" ? "" : treeContext.textHighlight,
+                    }}
+                    spellCheck={treeContext.spellCheck}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </ContextMenuHandler>
+      {childNodes && (
+        <div
+          className={`ton-collapsible-wrapper ${expanded && hasRenderedClosed && childNodes.length > 0 ? "" : "collapsed"}`}
+        >
+          {childNodes.length > 0 && (
             <div className="ton-collapsible">
               {childNodes.map((h) => (
                 <span
@@ -283,28 +302,22 @@ export const TreeNode = ({
                 </span>
               ))}
             </div>
-          </div>
-        )}
-        {showNewNode && (
-          <div>
-            <WordEntry
-              style={{ marginLeft: "14px" }}
-              id={`treenode-new-${id}`}
-              ref={newNameRef}
-              editing={true}
-              setValue={(ret) => {
-                confirmNewNode(ret);
-              }}
-              saving={savingNewNode}
-              sendEscape={() => {
-                setShowNewNode(false);
-              }}
-              spellCheck={treeContext.spellCheck}
-            />
-          </div>
-        )}
-      </div>
-    </ContextMenuHandler>
+          )}
+        </div>
+      )}
+      {showNewNode && (
+        <WordEntry
+          style={{ marginLeft: "14px" }}
+          id={`treenode-new-${id}`}
+          ref={newNameRef}
+          editing={true}
+          setValue={(ret) => confirmNewNode(ret)}
+          saving={savingNewNode}
+          sendEscape={() => setShowNewNode(false)}
+          spellCheck={treeContext.spellCheck}
+        />
+      )}
+    </>
   );
 };
 
