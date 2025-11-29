@@ -259,6 +259,7 @@ export const TreeNode = ({
                 >
                   <WordEntry
                     id={`${treeContext.id}-treenode-entry-${id}`}
+                    className={currentBorder ? "selected" : ""}
                     ref={currentNameRef}
                     value={thisNode.label}
                     editing={renaming}

@@ -3,18 +3,19 @@ import { Spinner } from "react-bootstrap";
 
 interface WordEntryProps {
   id: Key;
-  value?: string;
+  className?: string;
   editing?: boolean;
   saving?: boolean;
-  setValue?: (ret: string) => void;
   sendEscape?: () => void;
-  style?: React.CSSProperties;
+  setValue?: (ret: string) => void;
   spellCheck?: "true" | "false";
+  style?: React.CSSProperties;
+  value?: string;
 }
 
 export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
   (
-    { id, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
+    { id, className, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
     ref,
   ): JSX.Element => {
     const [currentValue, setCurrentValue] = useState<string>(value ?? "");
@@ -87,7 +88,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           id={String(id)}
           ref={ref}
           type="text"
-          className="ton-rename"
+          className={["ton-rename", className].filter(Boolean).join(" ")}
           value={currentValue}
           disabled={saving}
           onChange={(e) => setCurrentValue(e.currentTarget.value)}
