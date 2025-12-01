@@ -19,7 +19,7 @@ export interface TreeOfNodesProps<T> {
   onRemove?: (childId: Key) => Promise<INodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<INodeUpdate>;
   roots: Key[];
-  selected?: Key[];
+  selected?: Key | Key[];
   showCheckBox?: boolean;
   spellCheck?: "true" | "false";
   textHighlight?: string;
@@ -48,9 +48,10 @@ export const TreeOfNodes = <T,>({
   const [firstRender, setFirstRender] = useState<boolean>(alwaysShowSelected === "first");
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
   useEffect(() => {
-    if ((alwaysShowSelected === "always" || firstRender) && selected.length > 0) {
+    const selectedArray = Array.isArray(selected) ? selected : [selected];
+    if ((alwaysShowSelected === "always" || firstRender) && selectedArray.length > 0) {
       // Check all nodes are showing that should be
-      const shouldExpand = checkExpandedNodes(nodeList, selected, expandedNodes);
+      const shouldExpand = checkExpandedNodes(nodeList, selectedArray, expandedNodes);
       if (shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0) {
         setExpandedNodes(shouldExpand);
       }
@@ -75,18 +76,18 @@ export const TreeOfNodes = <T,>({
       <TreeOfNodesContext.Provider
         value={{
           id: id,
-          nodeList,
-          selected,
-          showCheckBox,
-          handleSelect,
           expandedNodes,
           handleExpandClick: (r, f) => changeExpand(r, f),
-          onAddChild: onAdd,
-          onRename,
-          onRemove,
+          handleSelect,
           nodeHighlight,
-          textHighlight,
+          nodeList,
+          onAddChild: onAdd,
+          onRemove,
+          onRename,
+          selected: Array.isArray(selected) ? selected : [selected],
+          showCheckBox,
           spellCheck,
+          textHighlight,
         }}
       >
         {roots.map((r) => (
