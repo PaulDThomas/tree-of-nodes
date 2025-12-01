@@ -1,6 +1,6 @@
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { checkExpandedNodes } from "../functions/checkExpandedNodes";
-import { iNodeUpdate, TreeNodeData } from "./interface";
+import { INodeUpdate, TreeNodeData } from "./interface";
 import { TreeNode } from "./TreeNode";
 import { TreeOfNodesContext } from "./TreeOfNodesContext";
 
@@ -11,9 +11,9 @@ interface TreeOfNodesProps<T> {
   showCheckBox?: boolean;
   selected?: Key | Key[];
   handleSelect?: (ret: Key | Key[]) => void;
-  onAdd?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
-  onRename?: (childId: Key, newName: string) => Promise<iNodeUpdate>;
-  onRemove?: (childId: Key) => Promise<iNodeUpdate>;
+  onAdd?: (parentId: Key, newName: string) => Promise<INodeUpdate>;
+  onRename?: (childId: Key, newName: string) => Promise<INodeUpdate>;
+  onRemove?: (childId: Key) => Promise<INodeUpdate>;
   canRemoveRoot?: boolean;
   canRenameRoot?: boolean;
   canAddChildren?: boolean;

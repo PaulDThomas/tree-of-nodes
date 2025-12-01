@@ -20,7 +20,7 @@ import { getDescendentIds } from "../functions/getDescendentIds";
 import "./TreeNode.css";
 import { TreeOfNodesContext } from "./TreeOfNodesContext";
 import { WordEntry } from "./WordEntry";
-import { iNodeUpdate } from "./interface";
+import { INodeUpdate } from "./interface";
 
 interface TreeNodeProps {
   id: Key;
@@ -115,7 +115,7 @@ export const TreeNode = ({
   const [updatingNode, setUpdatingNode] = useState<boolean>(false);
 
   // Context functions
-  const handleReturn = useCallback((ret: iNodeUpdate) => {
+  const handleReturn = useCallback((ret: INodeUpdate) => {
     if (!ret.success) {
       setError(true);
       setErrorText(ret.ErrorText ?? "An unknown error has occured");

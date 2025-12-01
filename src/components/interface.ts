@@ -1,6 +1,6 @@
 import { Key } from "react";
 
-export interface iNodeUpdate {
+export interface INodeUpdate {
   success: boolean;
   ErrorText?: string;
 }

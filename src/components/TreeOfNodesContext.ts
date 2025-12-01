@@ -1,5 +1,5 @@
 import { createContext, Key } from "react";
-import { iNodeUpdate, TreeNodeData } from "./interface";
+import { INodeUpdate, TreeNodeData } from "./interface";
 
 export interface TreeOfNodesContextProps<T> {
   id: string;
@@ -9,9 +9,9 @@ export interface TreeOfNodesContextProps<T> {
   handleSelect?: (ret: Key | Key[]) => void;
   expandedNodes: Key[];
   handleExpandClick: (ret: Key, force?: boolean) => void;
-  onAddChild?: (parentId: Key, newName: string) => Promise<iNodeUpdate>;
-  onRename?: (id: Key, newName: string) => Promise<iNodeUpdate>;
-  onRemove?: (id: Key) => Promise<iNodeUpdate>;
+  onAddChild?: (parentId: Key, newName: string) => Promise<INodeUpdate>;
+  onRename?: (id: Key, newName: string) => Promise<INodeUpdate>;
+  onRemove?: (id: Key) => Promise<INodeUpdate>;
   nodeHighlight: string;
   textHighlight: string;
   spellCheck?: "true" | "false";
