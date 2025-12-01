@@ -6,8 +6,11 @@
 
 # testing
 .parcel-cache
-/demo/dist
 /coverage
+
+# Storybook
+/storybook-static
+*storybook.log
 
 # production
 /build
