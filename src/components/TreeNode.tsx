@@ -1,14 +1,5 @@
 import { ContextMenuHandler, IMenuItem } from "@asup/context-menu";
-import {
-  Key,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Key, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import {
   CaretDownFill,
   CaretRight,
@@ -45,25 +36,14 @@ export const TreeNode = ({
   const treeContext = useContext(TreeOfNodesContext);
 
   // Node information
-  const thisNode = useMemo(
-    () => treeContext?.nodeList.find((n) => n.id === id),
-    [id, treeContext?.nodeList],
-  );
-  const childNodes = useMemo(
-    () => treeContext?.nodeList.filter((n) => n.parentId === id),
-    [id, treeContext?.nodeList],
-  );
-  const descendents = useMemo(
-    () => getDescendentIds(id, treeContext?.nodeList ?? []),
-    [id, treeContext],
-  );
+  const thisNode = treeContext?.nodeList.find((n) => n.id === id);
+  const childNodes = treeContext?.nodeList.filter((n) => n.parentId === id);
+  const descendents = getDescendentIds(id, treeContext?.nodeList ?? []);
 
   // State
   const [error, setError] = useState<boolean>(false);
   const [errorText, setErrorText] = useState<string>("");
-  const expanded = useMemo(() => {
-    return (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
-  }, [id, treeContext?.expandedNodes]);
+  const expanded = (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
 
   // Ensures that child nodes are drawn before they are expanded
   const [hasRenderedClosed, setHasRenderedClosed] = useState<boolean>(
@@ -93,16 +73,14 @@ export const TreeNode = ({
   }, [descendents, id, treeContext?.selected]);
 
   // Apply selected border
-  const currentBorder = useMemo<string>(() => {
-    return treeContext?.selected.includes(id) ? "1px solid black" : "";
-  }, [id, treeContext?.selected]);
-  const nodeColour = useMemo<string | undefined>(() => {
+  const currentBorder: string = treeContext?.selected.includes(id) ? "1px solid black" : "";
+  const nodeColour: string | undefined = (() => {
     if (treeContext && treeContext.selected) {
       const anc = getAncestors(treeContext.selected, [], treeContext?.nodeList).map((n) => n.id);
       if ([...anc, treeContext.selected].includes(id)) return treeContext.nodeHighlight;
     }
     return;
-  }, [id, treeContext]);
+  })();
 
   // New node parameters
   const newNameRef = useRef<HTMLInputElement | null>(null);
@@ -115,7 +93,7 @@ export const TreeNode = ({
   const [updatingNode, setUpdatingNode] = useState<boolean>(false);
 
   // Context functions
-  const handleReturn = useCallback((ret: INodeUpdate) => {
+  const handleReturn = (ret: INodeUpdate) => {
     if (!ret.success) {
       setError(true);
       setErrorText(ret.ErrorText ?? "An unknown error has occured");
@@ -123,67 +101,58 @@ export const TreeNode = ({
       setError(false);
       setErrorText("");
     }
-  }, []);
+  };
 
-  const confirmNewNode = useCallback(
-    async (label: string) => {
-      setSavingNewNode(true);
-      if (treeContext?.onAddChild) {
-        handleReturn(await treeContext.onAddChild(id, label));
-      }
-      setSavingNewNode(false);
-      setShowNewNode(false);
-    },
-    [handleReturn, id, treeContext],
-  );
+  const confirmNewNode = async (label: string) => {
+    setSavingNewNode(true);
+    if (treeContext?.onAddChild) {
+      handleReturn(await treeContext.onAddChild(id, label));
+    }
+    setSavingNewNode(false);
+    setShowNewNode(false);
+  };
 
-  const renameNode = useCallback(
-    async (newLabel: string) => {
-      setRenaming(false);
-      if (treeContext?.onRename) {
-        setUpdatingNode(true);
-        handleReturn(await treeContext.onRename(id, newLabel));
-        setUpdatingNode(false);
-      }
-    },
-    [handleReturn, id, treeContext],
-  );
+  const renameNode = async (newLabel: string) => {
+    setRenaming(false);
+    if (treeContext?.onRename) {
+      setUpdatingNode(true);
+      handleReturn(await treeContext.onRename(id, newLabel));
+      setUpdatingNode(false);
+    }
+  };
 
-  const deleteThis = useCallback(async () => {
+  const deleteThis = async () => {
     if (treeContext?.onRemove) {
       setUpdatingNode(true);
       handleReturn(await treeContext.onRemove(id));
       setUpdatingNode(false);
     }
-  }, [handleReturn, id, treeContext]);
+  };
 
   // Context actions
-  const addChild = useCallback(() => {
+  const addChild = () => {
     setShowNewNode(true);
     treeContext?.handleExpandClick?.(id, true);
-  }, [id, treeContext]);
+  };
   useEffect(() => {
     if (showNewNode === true && newNameRef.current) newNameRef.current.focus();
   }, [showNewNode]);
-  const renameThis = useCallback(() => {
+  const renameThis = () => {
     setRenaming(true);
     treeContext?.handleSelect?.(id);
-  }, [id, treeContext]);
+  };
 
   // Context menu
-  const menuItems = useMemo(() => {
-    const menuItems: IMenuItem[] = [];
-    if (canAddChildren) {
-      menuItems.push({ label: "Add", action: addChild });
-    }
-    if (canRename) {
-      menuItems.push({ label: "Rename", action: renameThis });
-    }
-    if (canRemove && (childNodes === undefined || childNodes.length === 0)) {
-      menuItems.push({ label: "Delete", action: deleteThis });
-    }
-    return menuItems;
-  }, [addChild, canAddChildren, canRemove, canRename, childNodes, deleteThis, renameThis]);
+  const menuItems: IMenuItem[] = [];
+  if (canAddChildren) {
+    menuItems.push({ label: "Add", action: addChild });
+  }
+  if (canRename) {
+    menuItems.push({ label: "Rename", action: renameThis });
+  }
+  if (canRemove && (childNodes === undefined || childNodes.length === 0)) {
+    menuItems.push({ label: "Delete", action: deleteThis });
+  }
 
   // Return node
   return !treeContext ? null : (

@@ -1,4 +1,4 @@
-import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { checkExpandedNodes } from "../functions/checkExpandedNodes";
 import { INodeUpdate, TreeNodeData } from "./interface";
 import { TreeNode } from "./TreeNode";
@@ -45,10 +45,9 @@ export const TreeOfNodes = <T extends unknown>({
   spellCheck = "true",
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
-  const selectedArray = useMemo(
-    () => (Array.isArray(selected) ? selected : [selected]),
-    [selected],
-  );
+  // React 19 compiler automatically optimizes this - no need for useMemo
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const selectedArray = Array.isArray(selected) ? selected : [selected];
   useEffect(() => {
     if (selectedArray.length > 0) {
       // Check all nodes are showing that should be
@@ -60,16 +59,13 @@ export const TreeOfNodes = <T extends unknown>({
   }, [expandedNodes, nodeList, selectedArray]);
 
   // Change expansion and update contexts
-  const changeExpand = useCallback(
-    (eKey: Key, force?: boolean) => {
-      const newExpandedNodes = [...expandedNodes];
-      const ix = newExpandedNodes.findIndex((nKey) => nKey === eKey);
-      if ((ix === -1 && force === undefined) || force === true) newExpandedNodes.push(eKey);
-      else newExpandedNodes.splice(ix, 1);
-      setExpandedNodes(newExpandedNodes);
-    },
-    [expandedNodes],
-  );
+  const changeExpand = (eKey: Key, force?: boolean) => {
+    const newExpandedNodes = [...expandedNodes];
+    const ix = newExpandedNodes.findIndex((nKey) => nKey === eKey);
+    if ((ix === -1 && force === undefined) || force === true) newExpandedNodes.push(eKey);
+    else newExpandedNodes.splice(ix, 1);
+    setExpandedNodes(newExpandedNodes);
+  };
 
   return (
     <div
