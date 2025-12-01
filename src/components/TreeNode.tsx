@@ -45,16 +45,6 @@ export const TreeNode = ({
   const [errorText, setErrorText] = useState<string>("");
   const expanded = (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
 
-  // Ensures that child nodes are drawn before they are expanded
-  // const [hasRenderedClosed, setHasRenderedClosed] = useState<boolean>(
-  //   childNodes !== undefined && childNodes.length > 0,
-  // );
-  // useEffect(() => {
-  //   if (childNodes && childNodes.length > 0 && !hasRenderedClosed) {
-  //     setHasRenderedClosed(true);
-  //   }
-  // }, [childNodes, hasRenderedClosed]);
-
   // Checkbox
   const checkRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {

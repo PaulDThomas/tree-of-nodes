@@ -13,6 +13,30 @@ const meta = {
     layout: "padded",
   },
   tags: ["autodocs"],
+  argTypes: {
+    id: { control: "text", description: "Unique tree id" },
+    nodeList: { control: "object", description: "Array of nodes" },
+    roots: { control: "object", description: "Root node ids" },
+    showCheckBox: { control: "boolean", description: "Show checkboxes" },
+    selected: { control: "object", description: "Selected node ids" },
+    nodeHighlight: { control: "color", description: "Node highlight color" },
+    textHighlight: { control: "color", description: "Text highlight color" },
+    canAddChildren: { control: "boolean", description: "Allow adding children" },
+    canRemoveChildren: { control: "boolean", description: "Allow removing children" },
+    canRenameChildren: { control: "boolean", description: "Allow renaming children" },
+    canRenameRoot: { control: "boolean", description: "Allow renaming root" },
+    canRemoveRoot: { control: "boolean", description: "Allow removing root" },
+    spellCheck: {
+      control: "select",
+      options: ["true", "false"],
+      description: "Enable spell check",
+    },
+    alwaysShowSelected: {
+      control: "select",
+      options: [undefined, "always", "first"],
+      description: "Always show selected nodes",
+    },
+  },
 };
 
 export default meta;
@@ -38,6 +62,7 @@ export const WithCheckboxes: Story = {
         roots={args.roots || [0, "X"]}
         showCheckBox={args.showCheckBox}
         selected={args.selected}
+        alwaysShowSelected={args.alwaysShowSelected}
         handleSelect={(i: Key | Key[]) => {
           if (Array.isArray(i)) {
             const selected = (args.selected as Key[]) || [];
@@ -79,6 +104,7 @@ export const CustomHighlighting: Story = {
         nodeHighlight={args.nodeHighlight}
         textHighlight={args.textHighlight}
         selected={args.selected}
+        alwaysShowSelected={args.alwaysShowSelected}
         handleSelect={(i: Key | Key[]) => {
           updateArgs({ selected: Array.isArray(i) ? i : [i] });
         }}
@@ -113,6 +139,7 @@ export const FullyEditable: Story = {
         canRenameChildren={args.canRenameChildren}
         canRenameRoot={args.canRenameRoot}
         canRemoveRoot={args.canRemoveRoot}
+        alwaysShowSelected={args.alwaysShowSelected}
         onAdd={async (p, n) => {
           const newId =
             (Math.max(
@@ -182,6 +209,7 @@ export const SpellCheckDisabled: Story = {
         canRenameChildren={args.canRenameChildren}
         canRenameRoot={args.canRenameRoot}
         spellCheck={args.spellCheck}
+        alwaysShowSelected={args.alwaysShowSelected}
         onRename={async (i, n) => {
           const ix = nodeList.findIndex(
             (node: TreeNodeData<{ value: number } | string | number | undefined>) => node.id === i,
@@ -211,6 +239,32 @@ export const SingleRoot: Story = {
     id: "single-root-tree",
     nodeList: mockNodes,
     roots: [0],
+  },
+};
+
+// Example with alwaysShowSelected enabled
+export const AlwaysShowSelected: Story = {
+  render: function AlwaysShowSelectedStory() {
+    const [args, updateArgs] = useArgs();
+    return (
+      <TreeOfNodes<{ value: number } | string | number | undefined>
+        id={args.id}
+        nodeList={args.nodeList || mockNodes}
+        roots={args.roots || [0, "X"]}
+        alwaysShowSelected={"always"}
+        selected={args.selected}
+        handleSelect={(i: Key | Key[]) => {
+          updateArgs({ selected: Array.isArray(i) ? i : [i] });
+        }}
+      />
+    );
+  },
+  args: {
+    id: "always-show-selected-tree",
+    nodeList: mockNodes,
+    roots: [0, "X"],
+    selected: [2],
+    alwaysShowSelected: "always",
   },
 };
 
@@ -248,6 +302,7 @@ export const LazyLoadedChildren: Story = {
           nodeList={nodeList}
           roots={["X"]}
           selected={selected}
+          alwaysShowSelected={undefined}
           handleSelect={(i: Key | Key[]) => {
             if (Array.isArray(i)) {
               setStoryArgs({ selected: i });
