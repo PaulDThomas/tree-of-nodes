@@ -9,7 +9,7 @@ interface TreeOfNodesProps<T> {
   nodeList: TreeNodeData<T>[];
   roots: Key[];
   showCheckBox?: boolean;
-  selected?: Key | Key[];
+  selected?: Key[];
   handleSelect?: (ret: Key | Key[]) => void;
   onAdd?: (parentId: Key, newName: string) => Promise<INodeUpdate>;
   onRename?: (childId: Key, newName: string) => Promise<INodeUpdate>;
@@ -24,8 +24,7 @@ interface TreeOfNodesProps<T> {
   spellCheck?: "true" | "false";
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-export const TreeOfNodes = <T extends unknown>({
+export const TreeOfNodes = <T,>({
   id,
   nodeList,
   roots,
@@ -45,18 +44,15 @@ export const TreeOfNodes = <T extends unknown>({
   spellCheck = "true",
 }: TreeOfNodesProps<T>) => {
   const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
-  // React 19 compiler automatically optimizes this - no need for useMemo
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const selectedArray = Array.isArray(selected) ? selected : [selected];
   useEffect(() => {
-    if (selectedArray.length > 0) {
+    if (selected.length > 0) {
       // Check all nodes are showing that should be
-      const shouldExpand = checkExpandedNodes(nodeList, selectedArray, expandedNodes);
+      const shouldExpand = checkExpandedNodes(nodeList, selected, expandedNodes);
       if (shouldExpand.filter((n) => !expandedNodes.includes(n)).length > 0) {
         setExpandedNodes(shouldExpand);
       }
     }
-  }, [expandedNodes, nodeList, selectedArray]);
+  }, [expandedNodes, nodeList, selected]);
 
   // Change expansion and update contexts
   const changeExpand = (eKey: Key, force?: boolean) => {
@@ -76,7 +72,7 @@ export const TreeOfNodes = <T extends unknown>({
         value={{
           id: id,
           nodeList,
-          selected: selectedArray,
+          selected,
           showCheckBox,
           handleSelect,
           expandedNodes,

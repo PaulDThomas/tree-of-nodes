@@ -46,14 +46,14 @@ export const TreeNode = ({
   const expanded = (treeContext?.expandedNodes.findIndex((e) => e === id) ?? -1) > -1;
 
   // Ensures that child nodes are drawn before they are expanded
-  const [hasRenderedClosed, setHasRenderedClosed] = useState<boolean>(
-    childNodes !== undefined && childNodes.length > 0,
-  );
-  useEffect(() => {
-    if (childNodes && childNodes.length > 0 && !hasRenderedClosed) {
-      setHasRenderedClosed(true);
-    }
-  }, [childNodes, hasRenderedClosed]);
+  // const [hasRenderedClosed, setHasRenderedClosed] = useState<boolean>(
+  //   childNodes !== undefined && childNodes.length > 0,
+  // );
+  // useEffect(() => {
+  //   if (childNodes && childNodes.length > 0 && !hasRenderedClosed) {
+  //     setHasRenderedClosed(true);
+  //   }
+  // }, [childNodes, hasRenderedClosed]);
 
   // Checkbox
   const checkRef = useRef<HTMLInputElement | null>(null);
@@ -134,9 +134,6 @@ export const TreeNode = ({
     setShowNewNode(true);
     treeContext?.handleExpandClick?.(id, true);
   };
-  useEffect(() => {
-    if (showNewNode === true && newNameRef.current) newNameRef.current.focus();
-  }, [showNewNode]);
   const renameThis = () => {
     setRenaming(true);
     treeContext?.handleSelect?.(id);
@@ -153,6 +150,10 @@ export const TreeNode = ({
   if (canRemove && (childNodes === undefined || childNodes.length === 0)) {
     menuItems.push({ label: "Delete", action: deleteThis });
   }
+
+  useEffect(() => {
+    if (showNewNode === true && newNameRef.current) newNameRef.current.focus();
+  }, [showNewNode]);
 
   // Return node
   return !treeContext ? null : (
@@ -250,7 +251,7 @@ export const TreeNode = ({
       </ContextMenuHandler>
       {childNodes && (
         <div
-          className={`ton-collapsible-wrapper ${expanded && hasRenderedClosed && childNodes.length > 0 ? "" : "collapsed"}`}
+          className={`ton-collapsible-wrapper ${expanded && childNodes.length > 0 ? "" : "collapsed"}`}
         >
           {childNodes.length > 0 && (
             <div className="ton-collapsible">
