@@ -1,4 +1,4 @@
-import React, { Key, useCallback, useEffect, useState } from "react";
+import { CSSProperties, forwardRef, JSX, Key, KeyboardEvent, useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 
 interface WordEntryProps {
@@ -9,11 +9,11 @@ interface WordEntryProps {
   sendEscape?: () => void;
   setValue?: (ret: string) => void;
   spellCheck?: "true" | "false";
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   value?: string;
 }
 
-export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
+export const WordEntry = forwardRef<HTMLInputElement, WordEntryProps>(
   (
     { id, className, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
     ref,
@@ -23,21 +23,14 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
       setCurrentValue(value ?? "");
     }, [value]);
 
-    const returnData = useCallback(() => {
-      setValue?.(currentValue);
-    }, [currentValue, setValue]);
-
-    const keyPress = useCallback(
-      (e: React.KeyboardEvent) => {
-        if (e.code === "Escape") {
-          setCurrentValue(value ?? "");
-          sendEscape?.();
-        } else if (e.code === "Enter") {
-          returnData();
-        }
-      },
-      [returnData, sendEscape, value],
-    );
+    const keyPress = (e: KeyboardEvent) => {
+      if (e.code === "Escape") {
+        setCurrentValue(value ?? "");
+        sendEscape?.();
+      } else if (e.code === "Enter") {
+        setValue?.(currentValue);
+      }
+    };
 
     // Add window onMouseDown event to stop events when editing
     useEffect(() => {
@@ -52,14 +45,14 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
         ) {
           e.preventDefault();
           e.stopPropagation();
-          returnData();
+          setValue?.(currentValue);
         }
       };
       window.addEventListener("mousedown", handleMouseDown);
       return () => {
         window.removeEventListener("mousedown", handleMouseDown);
       };
-    }, [editing, id, returnData]);
+    }, [currentValue, editing, id, setValue]);
 
     return !editing ? (
       <span
@@ -92,7 +85,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
           value={currentValue}
           disabled={saving}
           onChange={(e) => setCurrentValue(e.currentTarget.value)}
-          onBlur={returnData}
+          onBlur={(e) => setValue?.(e.currentTarget.value)}
           onKeyDownCapture={keyPress}
         />
       </div>
