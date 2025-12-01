@@ -21,11 +21,12 @@
   "homepage": "https://github.com/PaulDThomas/tree-of-nodes#readme",
   "scripts": {
     "prepare": "husky",
-    "start": "rmdir /q/s .\\.parcel-cache && parcel demo/index.html --dist-dir demo/dist",
     "test": "jest --collectCoverage=true",
     "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
-    "eslint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" \"demo/**/*.{js,jsx,ts,tsx}\"",
-    "build": "rmdir /q/s .\\.parcel-cache && parcel build src/main.ts"
+    "eslint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "build": "npx rimraf .parcel-cache && parcel build src/main.ts",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@asup/context-menu": "^2.0.0",
@@ -78,7 +79,18 @@
     "process": "^0.11.10",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "storybook": "^10.1.2",
+    "@storybook/react-vite": "^10.1.2",
+    "@chromatic-com/storybook": "^4.1.3",
+    "@storybook/addon-vitest": "^10.1.2",
+    "@storybook/addon-a11y": "^10.1.2",
+    "@storybook/addon-docs": "^10.1.2",
+    "@storybook/addon-onboarding": "^10.1.2",
+    "vitest": "^4.0.14",
+    "playwright": "^1.57.0",
+    "@vitest/browser-playwright": "^4.0.14",
+    "@vitest/coverage-v8": "^4.0.14"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

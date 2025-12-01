@@ -34,16 +34,19 @@
 }
 
 .ton-label-span {
+  border-radius: 3px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
   display: inline-block;
-  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 24px;
   overflow: hidden;
+  padding: 1px 3px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 1px;
-  padding-left: 3px;
-  padding-right: 3px;
-  border: 1px;
-  border-radius: 3px;
+  width: 100%;
 }
 
 .ton-rename-holder {
@@ -51,10 +54,21 @@
 }
 
 .ton-rename {
-  line-height: 24px;
+  border-radius: 3px;
   border: 1px dotted black;
-  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 24px;
   min-width: 0;
+  padding: 1px 3px;
+  width: 100%;
+}
+
+.ton-rename:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .ton-child {

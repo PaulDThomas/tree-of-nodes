@@ -22,7 +22,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["**/build/**/*", "**/coverage/**/*", "**/dist/**/*"],
+    ignores: ["**/build/**/*", "**/coverage/**/*", "**/dist/**/*", "**/storybook-static/**/*"],
   },
   ...fixupConfigRules(
     compat.extends(

@@ -4,7 +4,7 @@ import { INodeUpdate, TreeNodeData } from "./interface";
 import { TreeNode } from "./TreeNode";
 import { TreeOfNodesContext } from "./TreeOfNodesContext";
 
-interface TreeOfNodesProps<T> {
+export interface TreeOfNodesProps<T> {
   id: string;
   nodeList: TreeNodeData<T>[];
   roots: Key[];
