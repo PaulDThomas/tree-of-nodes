@@ -1,4 +1,13 @@
-import React, { Key, useCallback, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  forwardRef,
+  JSX,
+  Key,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Spinner } from "react-bootstrap";
 
 interface WordEntryProps {
@@ -9,11 +18,11 @@ interface WordEntryProps {
   sendEscape?: () => void;
   setValue?: (ret: string) => void;
   spellCheck?: "true" | "false";
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   value?: string;
 }
 
-export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
+export const WordEntry = forwardRef<HTMLInputElement, WordEntryProps>(
   (
     { id, className, value, editing, saving, setValue, sendEscape, style, spellCheck = "true" },
     ref,
@@ -28,7 +37,7 @@ export const WordEntry = React.forwardRef<HTMLInputElement, WordEntryProps>(
     }, [currentValue, setValue]);
 
     const keyPress = useCallback(
-      (e: React.KeyboardEvent) => {
+      (e: KeyboardEvent) => {
         if (e.code === "Escape") {
           setCurrentValue(value ?? "");
           sendEscape?.();

@@ -28,7 +28,6 @@ export default [
     compat.extends(
       "eslint:recommended",
       "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
       "plugin:@typescript-eslint/recommended",
       "plugin:jest/recommended",
     ),
@@ -37,7 +36,7 @@ export default [
     plugins: {
       react: fixupPluginRules(react),
       "@typescript-eslint": fixupPluginRules(typescriptEslint),
-      "react-hooks": fixupPluginRules(reactHooks),
+      "react-hooks": reactHooks,
       jest: fixupPluginRules(jest),
       "unused-imports": unusedImports,
     },

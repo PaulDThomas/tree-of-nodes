@@ -1,4 +1,4 @@
-import { ContextMenuHandler, MenuItem } from "@asup/context-menu";
+import { ContextMenuHandler, IMenuItem } from "@asup/context-menu";
 import {
   Key,
   ReactNode,
@@ -172,7 +172,7 @@ export const TreeNode = ({
 
   // Context menu
   const menuItems = useMemo(() => {
-    const menuItems: MenuItem[] = [];
+    const menuItems: IMenuItem[] = [];
     if (canAddChildren) {
       menuItems.push({ label: "Add", action: addChild });
     }

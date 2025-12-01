@@ -1,5 +1,5 @@
-import { checkExpandedNodes } from "./checkExpandedNodes";
 import { mockNodes } from "../__mocks__/mockNodes";
+import { checkExpandedNodes } from "./checkExpandedNodes";
 
 describe("Test checkExpandedNodes", () => {
   test("Check return", () => {
