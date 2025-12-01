@@ -24,7 +24,7 @@
     "test": "jest --collectCoverage=true",
     "test-watch": "jest --watch --collectCoverage=true --maxWorkers=4",
     "eslint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "build": "rm -rf .parcel-cache && parcel build src/main.ts",
+    "build": "npx rimraf .parcel-cache && parcel build src/main.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
