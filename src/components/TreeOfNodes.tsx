@@ -13,6 +13,7 @@ export interface TreeOfNodesProps<T> {
   canRenameRoot?: boolean;
   handleSelect?: (ret: Key | Key[]) => void;
   id: string;
+  initiallyExpandedNodes?: Key[];
   nodeHighlight?: string;
   nodeList: TreeNodeData<T>[];
   onAdd?: (parentId: Key, newName: string) => Promise<INodeUpdate>;
@@ -34,6 +35,7 @@ export const TreeOfNodes = <T,>({
   canRenameRoot = false,
   handleSelect,
   id,
+  initiallyExpandedNodes = [],
   nodeHighlight = "red",
   nodeList,
   onAdd,
@@ -46,7 +48,7 @@ export const TreeOfNodes = <T,>({
   textHighlight = "rgba(255, 0, 0, 0.2)",
 }: TreeOfNodesProps<T>) => {
   const [firstRender, setFirstRender] = useState<boolean>(alwaysShowSelected === "first");
-  const [expandedNodes, setExpandedNodes] = useState<Key[]>([]);
+  const [expandedNodes, setExpandedNodes] = useState<Key[]>(initiallyExpandedNodes);
   useEffect(() => {
     const selectedArray = Array.isArray(selected) ? selected : [selected];
     if ((alwaysShowSelected === "always" || firstRender) && selectedArray.length > 0) {
@@ -73,7 +75,7 @@ export const TreeOfNodes = <T,>({
       id={id}
       className="tree-of-nodes"
     >
-      <TreeOfNodesContext.Provider
+      <TreeOfNodesContext
         value={{
           id: id,
           expandedNodes,
@@ -101,7 +103,7 @@ export const TreeOfNodes = <T,>({
             canRenameChildren={canRenameChildren}
           />
         ))}
-      </TreeOfNodesContext.Provider>
+      </TreeOfNodesContext>
     </div>
   );
 };

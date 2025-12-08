@@ -38,17 +38,23 @@ describe("Tree of node", () => {
     await user.click(item as HTMLElement);
   });
 
-  test("Click expand", async () => {
+  test("Initially expanded", async () => {
     const { container } = await act(async () =>
       render(
         <TreeOfNodes
           id={"node-tree"}
           selected={4}
           nodeList={mockNodes}
+          initiallyExpandedNodes={mockNodes
+            .filter((n) => typeof n.id === "number")
+            .map((n) => n.id)}
           roots={[0]}
         />,
       ),
     );
+    const expanded = container.querySelectorAll(".ton-collapsible-wrapper:not(.collapsed)");
+    expect(expanded.length).toBe(2);
+
     const child = container.querySelector("#node-tree-treenode-child-A") as HTMLSpanElement;
     expect(child).toBeInTheDocument();
     const wrapper = child.closest(".ton-collapsible-wrapper") as HTMLDivElement;
