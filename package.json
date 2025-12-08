@@ -1,6 +1,6 @@
 {
   "name": "@asup/tree-of-nodes",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "REACT Typescript Treeview component",
   "author": "Paul Thomas <@PaulDThomas>",
   "private": false,
@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@asup/context-menu": "^2.0.0",
-    "@swc/helpers": "^0.5.1",
     "bootstrap": "^5.2.2",
     "react": "^19.2.0",
     "react-bootstrap": "^2.5.0",
@@ -38,7 +37,6 @@
     "react-dom": "^19.2.0"
   },
   "peerDependencies": {
-    "@swc/helpers": "^0.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -66,6 +64,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-storybook": "10.1.4",
     "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
@@ -73,6 +72,7 @@
     "jest-watch-typeahead": "^3.0.1",
     "lint-staged": "^16.1.0",
     "parcel": "^2.7.0",
+    "playwright": "^1.57.0",
     "postcss": "^8.4.18",
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^4.1.0",
@@ -80,15 +80,14 @@
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
-    "storybook": "^10.1.2",
-    "@storybook/react-vite": "^10.1.2",
+    "storybook": "^10.1.4",
+    "@storybook/react-vite": "^10.1.4",
     "@chromatic-com/storybook": "^4.1.3",
-    "@storybook/addon-vitest": "^10.1.2",
-    "@storybook/addon-a11y": "^10.1.2",
-    "@storybook/addon-docs": "^10.1.2",
-    "@storybook/addon-onboarding": "^10.1.2",
+    "@storybook/addon-vitest": "^10.1.4",
+    "@storybook/addon-a11y": "^10.1.4",
+    "@storybook/addon-docs": "^10.1.4",
+    "@storybook/addon-onboarding": "^10.1.4",
     "vitest": "^4.0.14",
-    "playwright": "^1.57.0",
     "@vitest/browser-playwright": "^4.0.14",
     "@vitest/coverage-v8": "^4.0.14"
   },

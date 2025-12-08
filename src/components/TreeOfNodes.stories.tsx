@@ -321,3 +321,12 @@ export const LazyLoadedChildren: Story = {
     selected: [],
   },
 };
+
+export const InitiallyExpanded: Story = {
+  args: {
+    id: "initially-expanded-tree",
+    nodeList: mockNodes,
+    roots: [0],
+    initiallyExpandedNodes: [0, 1],
+  },
+};
